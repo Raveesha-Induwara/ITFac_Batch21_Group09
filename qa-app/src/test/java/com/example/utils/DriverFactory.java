@@ -10,16 +10,18 @@ public class DriverFactory {
     public static WebDriver getDriver() {
 
         if (driver == null) {
-            String browser = ConfigReader.get("browser");
-
-            if (browser.equalsIgnoreCase("chrome")) {
-                driver = new ChromeDriver();
-            }
-
+            driver = new ChromeDriver();
             driver.manage().window().maximize();
         }
 
         return driver;
+    }
+
+    public static void quitDriver() {
+        if (driver != null) {
+            driver.quit();
+            driver = null; // 🔥 CRITICAL LINE
+        }
     }
 
     public static String getBaseUrl() {

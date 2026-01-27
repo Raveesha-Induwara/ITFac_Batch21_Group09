@@ -12,15 +12,12 @@ public class Hooks {
     @Before
     public void setUp() {
         driver = DriverFactory.getDriver();
-        driver.get(DriverFactory.getBaseUrl()); // 🔥 base URL only
+        driver.get(DriverFactory.getBaseUrl());
     }
 
     @After
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
-        }
+        DriverFactory.quitDriver();
     }
 
     public static WebDriver getDriver() {
