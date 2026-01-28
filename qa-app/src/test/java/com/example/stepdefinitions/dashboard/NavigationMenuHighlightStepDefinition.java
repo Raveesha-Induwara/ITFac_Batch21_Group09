@@ -8,7 +8,6 @@ import com.example.pages.dashboard.DashboardPage;
 import com.example.pages.login.LoginPage;
 import com.example.stepdefinitions.Hooks;
 
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -18,17 +17,10 @@ public class NavigationMenuHighlightStepDefinition {
     private LoginPage loginPage;
     private DashboardPage dashboardPage;
 
-    @Given("the user is logged in as an admin user")
-    public void theUserIsLoggedInAndOnTheDashboardPage() {
+    public NavigationMenuHighlightStepDefinition() {
         driver = Hooks.getDriver();
         loginPage = new LoginPage(driver);
         dashboardPage = new DashboardPage(driver);
-        
-        loginPage.goToLoginPage();
-        loginPage.entersValidCredentials();
-        loginPage.clickLoginButton();
-
-        dashboardPage.goToDashboardPage();
     }
 
     @When("the user is on the dashboard page")

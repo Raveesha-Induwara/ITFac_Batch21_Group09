@@ -20,25 +20,9 @@ public class SalesPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    private By usernameField = By.name("username");
-    private By passwordField = By.name("password");
-    private By loginButton   = By.className("btn-primary");
     private By salesTableRows = By.cssSelector("table tbody tr");
-
     private By paginationContainer = By.cssSelector("//ul.pagination");
     private By nextPageButton = By.cssSelector("//ul.pagination li.next a");
-
-    public void goToLoginPage() {
-        driver.get(DriverFactory.getBaseUrl() + "/ui/login");
-    }
-
-    public void loginAsAdmin() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField))
-                .sendKeys("admin");
-
-        driver.findElement(passwordField).sendKeys("admin123");
-        driver.findElement(loginButton).click();
-    }
 
     public void clickMenuInSideNavigation(String menuName) {
         By menuLocator = By.partialLinkText(menuName);

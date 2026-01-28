@@ -4,7 +4,7 @@ Feature: Side Navigation menu highlights the active page.
   I want to see Dashboard right after login
 
   Background:
-    Given the user is logged in as an admin user
+    Given the user is logged in as an admin
 
   Scenario: Verify navigation menu highlights the active page for admin users.
     When the user is on the dashboard page
