@@ -27,7 +27,10 @@ public class SalesPage {
     private By usernameField = By.name("username");
     private By passwordField = By.name("password");
     private By loginButton   = By.className("btn-primary");
+    
+    // Updated selectors with better wait conditions
     private By salesTableRows = By.cssSelector("table tbody tr");
+    private By salesTable = By.tagName("table");
 
     private By paginationContainer = By.cssSelector("ul.pagination");
     private By nextPageButton = By.cssSelector("ul.pagination li.next a");
@@ -37,7 +40,7 @@ public class SalesPage {
     private By logoutButton = By.partialLinkText("Logout");
 
     private By salesRows = By.cssSelector("table tbody tr");
-    private By soldDateColumn = By.cssSelector("td.sold-date"); // adjust selector
+    private By soldDateColumn = By.cssSelector("table tbody tr td:nth-child(4)"); // adjust selector
     private By salesSideNavigation = By.partialLinkText("Sales");
 
 
@@ -70,6 +73,12 @@ public class SalesPage {
                 .equalsIgnoreCase(
                     DriverFactory.getBaseUrl() + "/ui/" + pageName.toLowerCase()
                 );
+    }
+
+    public boolean hasSalesData() {
+        waitForSalesPageToLoad();
+        List<WebElement> rows = driver.findElements(salesRows);
+        return !rows.isEmpty();
     }
 
     private void waitForSalesPageToLoad() {
