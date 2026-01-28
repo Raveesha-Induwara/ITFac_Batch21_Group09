@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class SalesPage {
 
@@ -167,4 +168,13 @@ public class SalesPage {
 
         return true;
     }
+
+    public boolean isSellPlantButtonVisible() {
+    try {
+        WebElement button = driver.findElement(sellPlantButton);
+        return button.isDisplayed();
+    } catch (NoSuchElementException e) {
+        return false;
+    }
+}
 }
