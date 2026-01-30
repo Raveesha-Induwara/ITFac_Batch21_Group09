@@ -2,6 +2,7 @@ package com.example.pages.sales;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -44,6 +45,9 @@ public class SalesPage {
     private By soldDateColumn = By.cssSelector("table tbody tr td:nth-child(4)"); // adjust selector
     private By salesSideNavigation = By.partialLinkText("Sales");
 
+    // Delete action
+    private By firstRowDeleteButton =
+    By.cssSelector("table tbody tr:first-child form button.btn-outline-danger");
 
     public void clickMenuInSideNavigation(String menuName) {
         By menuLocator = By.partialLinkText(menuName);
@@ -160,6 +164,34 @@ public class SalesPage {
     public boolean isSellPlantButtonVisible() {
         return !driver.findElements(sellPlantButton).isEmpty()
             && driver.findElements(sellPlantButton).get(0).isDisplayed();
+    }
+
+    public int getSalesRecordCount() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(salesRows));
+        return driver.findElements(salesRows).size();
+    }
+
+    public void clickDeleteOnFirstSalesRecord() {
+        wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteButton))
+            .click();
+    }
+
+    public boolean isDeleteConfirmationAlertDisplayed() {
+        try {
+            WebDriverWait alertWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            alertWait.until(ExpectedConditions.alertIsPresent());
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public String getDeleteConfirmationMessage() {
+        return driver.switchTo().alert().getText();
+    }
+
+    public void cancelDeleteConfirmation() {
+        driver.switchTo().alert().dismiss(); // Clicks "Cancel"
     }
 
 }
