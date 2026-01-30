@@ -158,11 +158,8 @@ public class SalesPage {
     }
 
     public boolean isSellPlantButtonVisible() {
-    try {
-        WebElement button = driver.findElement(sellPlantButton);
-        return button.isDisplayed();
-    } catch (NoSuchElementException e) {
-        return false;
+        return !driver.findElements(sellPlantButton).isEmpty()
+            && driver.findElements(sellPlantButton).get(0).isDisplayed();
     }
-}
+
 }
