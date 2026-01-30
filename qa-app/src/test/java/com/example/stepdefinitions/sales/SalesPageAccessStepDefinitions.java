@@ -13,13 +13,9 @@ public class SalesPageAccessStepDefinitions {
     private WebDriver driver;
     private SalesPage salesPage;
 
-    @Given("the user is logged in as an admin")
-    public void theUserIsLoggedInAsAnAdmin() {
-        driver = Hooks.getDriver();          //get driver from Hooks
-        salesPage = new SalesPage(driver);  
-
-        salesPage.goToLoginPage();         
-        salesPage.loginAsAdmin();
+    public SalesPageAccessStepDefinitions() {
+        driver = Hooks.getDriver();
+        salesPage = new SalesPage(driver);
     }
 
     @When("the admin clicks on {string} in the side navigation")

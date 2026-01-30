@@ -45,18 +45,6 @@ public class SalesPage {
     private By salesSideNavigation = By.partialLinkText("Sales");
 
 
-    public void goToLoginPage() {
-        driver.get(DriverFactory.getBaseUrl() + "/ui/login");
-    }
-
-    public void loginAsAdmin() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField))
-                .sendKeys("admin");
-
-        driver.findElement(passwordField).sendKeys("admin123");
-        driver.findElement(loginButton).click();
-    }
-
     public void clickMenuInSideNavigation(String menuName) {
         By menuLocator = By.partialLinkText(menuName);
 
