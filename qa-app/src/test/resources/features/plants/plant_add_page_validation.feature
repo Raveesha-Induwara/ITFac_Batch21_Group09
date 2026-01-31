@@ -14,10 +14,12 @@ Feature: Plant Management Validation
     And the plant form should not be submitted
 
     Examples: 
-      | category | plant_name | price | quantity | expected_error                       | comment           |
-      | Select   | Rose       | 100   | 10       | Category is required                 | Invalid Category  |
-      | rose     |            | 100   | 10       | Plant name is required               | Empty Name        |
-      | rose     | Ro         | 100   | 10       | Plant name must be between 3 and 25  | Short Name        |
-      | rose     | Rose       | -5    | 10       | Price must be greater than 0         | Negative Price    |
-      | rose     | Rose       | 100   | -3       | Quantity cannot be negative          | Negative Quantity |
-      | rose     | Tulip      | 150   |          | Quantity is required                 | Empty Quantity    |
+      | category | plant_name                         | price | quantity | expected_error                       | comment           |
+      | Select   | Rose                               | 100   | 10       | Category is required                 | Invalid Category  |
+      | rose     |                                    | 100   | 10       | Plant name is required               | Empty Name        |
+      | rose     | Ro                                 | 100   | 10       | Plant name must be between 3 and 25  | Short Name        |
+      | rose     | Rooooooooooooooooooooooooooooooose | 100   | 10       | Plant name must be between 3 and 25  | Long Name         |
+      | rose     | Rose                               | -5    | 10       | Price must be greater than 0         | Negative Price    |
+      | rose     | Rose                               |       | 10       | Price is required                    | Non-numeric Price |
+      | rose     | Rose                               | 100   | -3       | Quantity cannot be negative          | Negative Quantity |
+      | rose     | Tulip                              | 150   |          | Quantity is required                 | Empty Quantity    |
