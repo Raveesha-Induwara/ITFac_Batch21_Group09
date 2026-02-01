@@ -24,6 +24,7 @@ public class AddPlantPage {
     private By priceField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[3]/input");
     private By quantityField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[4]/input");
     private By submitBtn = By.xpath("/html/body/div/div/div[2]/div[2]/form/button");
+    private By cancelBtn = By.linkText("Cancel");
     private By SubmissionAlertMsg = By.xpath("/html/body/div[1]/div/div[2]/div[2]/div");
 
     // Flexible locator to find any error message on the page
@@ -120,6 +121,16 @@ public class AddPlantPage {
         } catch (TimeoutException e) {
             return "No message displayed";
         }
+    }
+    // Method to click cancel
+
+    public void clickCancel() {
+        wait.until(ExpectedConditions.elementToBeClickable(cancelBtn)).click();
+    }
+
+// Method to verify the URL
+    public String getCurrentUrl() {
+        return driver.getCurrentUrl();
     }
    
 }
