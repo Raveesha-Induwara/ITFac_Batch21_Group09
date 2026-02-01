@@ -132,6 +132,20 @@ public class AddPlantPage {
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
+    
+    public boolean isPlantNameVisibleInTable(String plantName) {
+        // use your table body path but make it relative and search for the specific text
+        // This looks for any cell (td) or link (a) inside the tbody that matches the plant name
+        By plantRow = By.xpath("//tbody//tr//td[contains(text(), '" + plantName + "')]");
+
+        try {
+            // Wait up to a few seconds for the table to refresh and show the new entry
+            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(plantRow));
+            return element.isDisplayed();
+        } catch (TimeoutException e) {
+            return false; // Plant not found on the current page
+        }
+    }
    
 }
 
