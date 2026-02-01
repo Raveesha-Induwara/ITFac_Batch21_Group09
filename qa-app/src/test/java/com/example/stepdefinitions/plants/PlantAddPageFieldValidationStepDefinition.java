@@ -71,7 +71,6 @@ public class PlantAddPageFieldValidationStepDefinition {
     @And("the plant form should not be submitted")
     public void verifyFormStatus() {
         Assert.assertTrue("Form closed unexpectedly!", plantPage.isFormStillDisplayed());
-        // Interval between examples
         try {
             Thread.sleep(800);
         } catch (InterruptedException e) {
