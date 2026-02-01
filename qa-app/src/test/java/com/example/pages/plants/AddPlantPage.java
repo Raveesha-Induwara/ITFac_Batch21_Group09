@@ -24,6 +24,7 @@ public class AddPlantPage {
     private By priceField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[3]/input");
     private By quantityField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[4]/input");
     private By submitBtn = By.xpath("/html/body/div/div/div[2]/div[2]/form/button");
+    private By SubmissionAlertMsg = By.xpath("/html/body/div[1]/div/div[2]/div[2]/div");
 
     // Flexible locator to find any error message on the page
     private By anyErrorMsg = By.xpath("//div[contains(@class, 'text-danger')]");
@@ -35,10 +36,11 @@ public class AddPlantPage {
 
     public void navigateToPlantPage() {
         String targetUrl = DriverFactory.getBaseUrl() + "/ui/plants";
-        if (!driver.getCurrentUrl().equals(targetUrl)) {
-            driver.get(targetUrl);
-        }
+        
         try {
+            if (!driver.getCurrentUrl().equals(targetUrl)) {
+                driver.get(targetUrl);
+            }
             wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
         } catch (TimeoutException e) {
             driver.navigate().refresh();
@@ -108,4 +110,17 @@ public class AddPlantPage {
             return false;
         }
     }
+
+    public String AlertMsg() {
+
+        try {
+            // Wait for the message to appear
+            WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(SubmissionAlertMsg));
+            return messageElement.getText();
+        } catch (TimeoutException e) {
+            return "No message displayed";
+        }
+    }
+   
 }
+
