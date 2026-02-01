@@ -35,10 +35,11 @@ public class AddPlantPage {
 
     public void navigateToPlantPage() {
         String targetUrl = DriverFactory.getBaseUrl() + "/ui/plants";
-        if (!driver.getCurrentUrl().equals(targetUrl)) {
-            driver.get(targetUrl);
-        }
+        
         try {
+            if (!driver.getCurrentUrl().equals(targetUrl)) {
+                driver.get(targetUrl);
+            }
             wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
         } catch (TimeoutException e) {
             driver.navigate().refresh();
