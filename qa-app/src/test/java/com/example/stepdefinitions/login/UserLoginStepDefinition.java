@@ -18,4 +18,11 @@ public class UserLoginStepDefinition {
         common.launchApplication();
         common.loginAsAdmin();
     }
+
+    @Given("the user is logged in as a non-admin")
+    public void theUserIsLoggedInAsNonAdmin() {
+        common.logoutIfLoggedIn();
+        common.launchApplication();
+        common.loginAsNonAdmin();
+    }
 }

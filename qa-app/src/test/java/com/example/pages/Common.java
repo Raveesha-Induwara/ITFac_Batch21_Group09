@@ -35,4 +35,19 @@ public class Common {
         driver.findElement(loginButton).click();
     }
 
+    public void loginAsNonAdmin() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField))
+                .sendKeys("testuser");   // non-admin username
+
+        driver.findElement(passwordField).sendKeys("test123");
+        driver.findElement(loginButton).click();
+    }
+
+    public void logoutIfLoggedIn() {
+        try {
+            driver.findElement(By.partialLinkText("Logout")).click();
+        } catch (Exception ignored) {}
+    }
+
+
 }
