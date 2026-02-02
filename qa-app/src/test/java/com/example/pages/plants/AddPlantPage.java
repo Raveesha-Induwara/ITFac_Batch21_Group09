@@ -42,7 +42,7 @@ public class AddPlantPage {
             if (!driver.getCurrentUrl().equals(targetUrl)) {
                 driver.get(targetUrl);
             }
-            wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
+            
         } catch (TimeoutException e) {
             driver.navigate().refresh();
             wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
@@ -54,6 +54,7 @@ public class AddPlantPage {
     }
 
     public void clickAddPlant() {
+        wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
         wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn)).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(subCategoryDropdown));
     }
