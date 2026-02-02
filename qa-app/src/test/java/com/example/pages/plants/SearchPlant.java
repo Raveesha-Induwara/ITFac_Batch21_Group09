@@ -1,11 +1,13 @@
 package com.example.pages.plants;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SearchPlant {
@@ -18,6 +20,10 @@ public class SearchPlant {
     private By searchBtn = By.xpath("//button[text()='Search']");
     // Using the table body path you provided
     private By tableBody = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody");
+// Locators based on your provided XPaths
+    private By categorySelect = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[2]/select");
+    // This finds the 2nd column (Category) for ALL rows in the table body
+    private By categoryColumnCells = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr/td[2]");
 
     public SearchPlant(WebDriver driver) {
         this.driver = driver;
@@ -28,6 +34,11 @@ public class SearchPlant {
         WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(searchBar));
         input.clear();
         input.sendKeys(term);
+    }
+    public void selectCategory(String categoryName) {
+        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(categorySelect));
+        Select select = new Select(dropdown);
+        select.selectByVisibleText(categoryName);
     }
 
     public void clickSearch() {
@@ -42,5 +53,19 @@ public class SearchPlant {
         } catch (Exception e) {
             return 0;
         }
+    }
+    public boolean areAllResultsMatching(String expectedCategory) {
+        // Wait for results to load
+        wait.until(ExpectedConditions.presenceOfElementLocated(categoryColumnCells));
+        List<WebElement> cells = driver.findElements(categoryColumnCells);
+        
+        if (cells.isEmpty()) return false;
+
+        for (WebElement cell : cells) {
+            if (!cell.getText().trim().equalsIgnoreCase(expectedCategory)) {
+                return false; // Found a row that doesn't match the filter
+            }
+        }
+        return true;
     }
 }

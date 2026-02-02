@@ -135,7 +135,6 @@ public class AddPlantPage {
     }
     
     public boolean isPlantNameVisibleInTable(String plantName) {
-        // use your table body path but make it relative and search for the specific text
         // This looks for any cell (td) or link (a) inside the tbody that matches the plant name
         By plantRow = By.xpath("//tbody//tr//td[contains(text(), '" + plantName + "')]");
 

@@ -10,12 +10,12 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class SearchPlantStepDefinition {
+public class NameSearchPlantStepDefinition {
 
     private SearchPlant searchPage;
     private AddPlantPage plantPage;
 
-    public SearchPlantStepDefinition() {
+    public NameSearchPlantStepDefinition() {
         searchPage = new SearchPlant(Hooks.getDriver());
         plantPage = new AddPlantPage(Hooks.getDriver());
 
