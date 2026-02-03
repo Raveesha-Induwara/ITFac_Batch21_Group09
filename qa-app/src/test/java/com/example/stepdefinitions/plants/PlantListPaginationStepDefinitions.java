@@ -1,6 +1,7 @@
 package com.example.stepdefinitions.plants;
 
 import com.example.pages.plants.PlantListPage;
+import com.example.pages.plants.AddPlantPage;
 import com.example.stepdefinitions.Hooks;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
@@ -11,12 +12,57 @@ import static org.junit.Assert.*;
 public class PlantListPaginationStepDefinitions {
 
     private PlantListPage plantListPage;
+    private AddPlantPage addPlantPage;
     private Integer previousPage;
 
     @Before
     public void setup() {
         WebDriver driver = Hooks.getDriver();
         plantListPage = new PlantListPage(driver);
+        addPlantPage = new AddPlantPage(driver);
+    }
+
+    @Given("at least {int} plants exist in the system")
+    public void ensurePlantsExist(int requiredCount) {
+        // First, check current plant count
+        addPlantPage.navigateToPlantPage();
+        try {
+            Thread.sleep(1000); // Wait for page to load
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        int currentCount = plantListPage.getPlantCount();
+        System.out.println("Current plant count: " + currentCount);
+
+        // Add plants if needed
+        if (currentCount < requiredCount) {
+            int plantsToAdd = requiredCount - currentCount;
+            System.out.println("Adding " + plantsToAdd + " plants to reach " + requiredCount);
+
+            for (int i = 1; i <= plantsToAdd; i++) {
+                try {
+                    addPlantPage.clickAddPlant();
+                    addPlantPage.selectCategoryByName("Sunflower"); // Use first category
+                    addPlantPage.enterPlantName("Test Plant " + System.currentTimeMillis());
+                    addPlantPage.enterDetails("10.00", "5");
+                    addPlantPage.clickSubmit();
+                    Thread.sleep(500); // Wait between additions
+                } catch (Exception e) {
+                    System.out.println("Error adding plant: " + e.getMessage());
+                }
+            }
+
+            // Refresh to see updated list
+            addPlantPage.navigateToPlantPage();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("Final plant count: " + plantListPage.getPlantCount());
     }
 
     @Then("pagination controls should be displayed according to data size")

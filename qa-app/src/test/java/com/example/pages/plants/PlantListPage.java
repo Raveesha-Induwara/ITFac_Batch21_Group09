@@ -80,10 +80,16 @@ public class PlantListPage {
 
     private void click(By locator) {
         try {
-            wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+            // Scroll element into view
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+            Thread.sleep(300); // Small wait after scroll
+            element.click();
         } catch (Exception e) {
-            ((JavascriptExecutor) driver)
-                    .executeScript("arguments[0].click();", driver.findElement(locator));
+            // Fallback to JavaScript click
+            WebElement element = driver.findElement(locator);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
         }
     }
     private void waitForPageReload() {
