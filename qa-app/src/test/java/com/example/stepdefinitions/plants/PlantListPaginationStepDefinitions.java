@@ -75,8 +75,6 @@ public class PlantListPaginationStepDefinitions {
         plantListPage.goToPage(page);
     }
 
-    /* ---------- ASSERTIONS ---------- */
-
     @Then("the plant list should be displayed")
     public void plantListDisplayed() {
         assertTrue("Plant table should be visible", plantListPage.isPlantListVisible());
