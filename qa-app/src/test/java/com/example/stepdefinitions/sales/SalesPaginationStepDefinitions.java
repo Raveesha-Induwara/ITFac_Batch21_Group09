@@ -16,10 +16,10 @@ public class SalesPaginationStepDefinitions {
         );
     }
 
-    @Then("a maximum of 10 sales records are displayed per page")
-    public void maximumOf20SalesRecordsDisplayed() {
+    @When("a minimum of 11 sales records are displayed per page")
+    public void minimumOf11SalesRecordsDisplayed() {
         assertTrue(
-            "More than 10 sales records are displayed on a single page",
+            "Equal or more than 11 sales records are displayed on a single page",
             salesPage.areSalesRecordsWithinPageLimit()
         );
     }

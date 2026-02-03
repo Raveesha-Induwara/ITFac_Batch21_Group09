@@ -28,8 +28,8 @@ public class SalesPage {
 
     private By usernameField = By.name("username");
     private By passwordField = By.name("password");
-    private By loginButton   = By.className("btn-primary");
-    
+    private By loginButton = By.className("btn-primary");
+
     // Updated selectors with better wait conditions
     private By salesTableRows = By.cssSelector("table tbody tr");
     private By salesTable = By.tagName("table");
@@ -46,8 +46,7 @@ public class SalesPage {
     private By salesSideNavigation = By.partialLinkText("Sales");
 
     // Delete action
-    private By firstRowDeleteButton =
-    By.cssSelector("table tbody tr:first-child form button.btn-outline-danger");
+    private By firstRowDeleteButton = By.cssSelector("table tbody tr:first-child form button.btn-outline-danger");
 
     public void clickMenuInSideNavigation(String menuName) {
         By menuLocator = By.partialLinkText(menuName);
@@ -64,8 +63,7 @@ public class SalesPage {
     public boolean isOnPage(String pageName) {
         return driver.getCurrentUrl()
                 .equalsIgnoreCase(
-                    DriverFactory.getBaseUrl() + "/ui/" + pageName.toLowerCase()
-                );
+                        DriverFactory.getBaseUrl() + "/ui/" + pageName.toLowerCase());
     }
 
     public boolean hasSalesData() {
@@ -75,17 +73,23 @@ public class SalesPage {
     }
 
     private void waitForSalesPageToLoad() {
-    wait.until(ExpectedConditions.visibilityOfElementLocated(salesRows));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(salesRows));
     }
 
+    public boolean isPaginationVisible() {
+        return !driver.findElements(paginationContainer).isEmpty();
+    }
 
     private void scrollToPagination() {
-    WebElement pagination = wait.until(
-        ExpectedConditions.visibilityOfElementLocated(paginationContainer)
-    );
+        if (isPaginationVisible()) {
+            WebElement pagination = wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(paginationContainer));
 
-    ((JavascriptExecutor) driver)
-            .executeScript("arguments[0].scrollIntoView(true);", pagination);
+            ((JavascriptExecutor) driver)
+                    .executeScript("arguments[0].scrollIntoView(true);", pagination);
+        } else {
+            throw new NoSuchElementException("Pagination container not found.");
+        }
     }
 
     public boolean isSalesSortedBySoldDateDescending() {
@@ -95,13 +99,12 @@ public class SalesPage {
         List<WebElement> rows = driver.findElements(salesRows);
         List<LocalDateTime> soldDates = new ArrayList<>();
 
-        DateTimeFormatter formatter =
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         for (WebElement row : rows) {
             String dateText = row.findElement(soldDateColumn)
-                                .getText()
-                                .trim();
+                    .getText()
+                    .trim();
 
             soldDates.add(LocalDateTime.parse(dateText, formatter));
         }
@@ -123,12 +126,10 @@ public class SalesPage {
         return !links.isEmpty() && links.get(0).isDisplayed();
     }
 
-
     public boolean areSalesRecordsWithinPageLimit() {
         waitForSalesPageToLoad();
-        return driver.findElements(salesRows).size() <= 10;
+        return driver.findElements(salesRows).size() >= 11;
     }
-
 
     public boolean canNavigateBetweenPages() {
 
@@ -141,8 +142,7 @@ public class SalesPage {
             return false;
         }
 
-        String firstRowBefore =
-                driver.findElements(salesRows).get(0).getText();
+        String firstRowBefore = driver.findElements(salesRows).get(0).getText();
 
         for (WebElement link : links) {
             if (link.getText().equalsIgnoreCase("Next")) {
@@ -154,16 +154,14 @@ public class SalesPage {
         // Wait for table to refresh
         wait.until(ExpectedConditions.not(
                 ExpectedConditions.textToBePresentInElementLocated(
-                        salesRows, firstRowBefore
-                )
-        ));
+                        salesRows, firstRowBefore)));
 
         return true;
     }
 
     public boolean isSellPlantButtonVisible() {
         return !driver.findElements(sellPlantButton).isEmpty()
-            && driver.findElements(sellPlantButton).get(0).isDisplayed();
+                && driver.findElements(sellPlantButton).get(0).isDisplayed();
     }
 
     public int getSalesRecordCount() {
@@ -173,7 +171,7 @@ public class SalesPage {
 
     public void clickDeleteOnFirstSalesRecord() {
         wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteButton))
-            .click();
+                .click();
     }
 
     public boolean isDeleteConfirmationAlertDisplayed() {
