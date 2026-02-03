@@ -32,8 +32,8 @@ public class SalesPaginationStepDefinitions {
         );
     }
 
-    @Then("the admin can navigate between pages using the pagination controls")
-    public void adminCanNavigateBetweenPages() {
+    @Then("the user can navigate between pages using the pagination controls")
+    public void userCanNavigateBetweenPages() {
         assertTrue(
             "Unable to navigate to next page using pagination controls",
             salesPage.canNavigateBetweenPages()

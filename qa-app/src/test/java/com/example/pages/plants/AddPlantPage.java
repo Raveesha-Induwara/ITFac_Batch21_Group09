@@ -24,6 +24,7 @@ public class AddPlantPage {
     private By priceField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[3]/input");
     private By quantityField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[4]/input");
     private By submitBtn = By.xpath("/html/body/div/div/div[2]/div[2]/form/button");
+    private By cancelBtn = By.linkText("Cancel");
     private By SubmissionAlertMsg = By.xpath("/html/body/div[1]/div/div[2]/div[2]/div");
 
     // Flexible locator to find any error message on the page
@@ -41,7 +42,7 @@ public class AddPlantPage {
             if (!driver.getCurrentUrl().equals(targetUrl)) {
                 driver.get(targetUrl);
             }
-            wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
+            
         } catch (TimeoutException e) {
             driver.navigate().refresh();
             wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
@@ -53,6 +54,7 @@ public class AddPlantPage {
     }
 
     public void clickAddPlant() {
+        wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
         wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn)).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(subCategoryDropdown));
     }
@@ -119,6 +121,29 @@ public class AddPlantPage {
             return messageElement.getText();
         } catch (TimeoutException e) {
             return "No message displayed";
+        }
+    }
+    // Method to click cancel
+
+    public void clickCancel() {
+        wait.until(ExpectedConditions.elementToBeClickable(cancelBtn)).click();
+    }
+
+// Method to verify the URL
+    public String getCurrentUrl() {
+        return driver.getCurrentUrl();
+    }
+    
+    public boolean isPlantNameVisibleInTable(String plantName) {
+        // This looks for any cell (td) or link (a) inside the tbody that matches the plant name
+        By plantRow = By.xpath("//tbody//tr//td[contains(text(), '" + plantName + "')]");
+
+        try {
+            // Wait up to a few seconds for the table to refresh and show the new entry
+            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(plantRow));
+            return element.isDisplayed();
+        } catch (TimeoutException e) {
+            return false; // Plant not found on the current page
         }
     }
    

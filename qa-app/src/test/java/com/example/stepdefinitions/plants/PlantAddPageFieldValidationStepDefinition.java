@@ -20,7 +20,8 @@ public class PlantAddPageFieldValidationStepDefinition {
     }
 
     @Given("the user is on the {string} page")
-    public void theUserIsOnTheSpecificPage(String pageName) {
+    public void theUserIsOnTheSpecificPage(String pageName) throws InterruptedException {
+        Thread.sleep(200);
         plantPage.navigateToPlantPage();
         Assert.assertTrue("Admin is not on the page", plantPage.isOnPlantPage());
     }
