@@ -15,6 +15,7 @@ public class PlantListPage {
 
     private final By plantTable = By.tagName("table");
     private final By plantRows = By.cssSelector("tbody tr");
+    private final By noDataMessage = By.xpath("//td[contains(text(),'No plants found')]");
     private final By pagination = By.cssSelector("ul.pagination");
     private final By activePage = By.cssSelector("li.page-item.active");
     private final By nextButton = By.xpath("//a[normalize-space()='Next']");
@@ -49,6 +50,24 @@ public class PlantListPage {
     public boolean isPaginationVisible() {
         List<WebElement> pages = driver.findElements(pagination);
         return !pages.isEmpty() && pages.get(0).isDisplayed();
+    }
+
+    public boolean isNoDataMessageDisplayed() {
+        try {
+            List<WebElement> noDataElements = driver.findElements(noDataMessage);
+            return !noDataElements.isEmpty() && noDataElements.get(0).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getNoDataMessageText() {
+        try {
+            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(noDataMessage));
+            return element.getText().trim();
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public Integer getActivePageNumberSafe() {
