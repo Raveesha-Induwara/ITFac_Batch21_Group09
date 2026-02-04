@@ -55,14 +55,17 @@ public class PlantApiStepDefinition {
     @Then("the plant API should return status {int}")
     public void verify_status(int statusCode) {
         response.then().statusCode(statusCode);
+        response.prettyPrint();
     }
 
     @Then("the response message should be {string}")
     public void verify_message(String expectedValue) {
         if (response.statusCode() == 201) {
             response.then().body("name", equalTo(expectedValue));
+            response.prettyPrint();
         } else {
             response.then().body("message", containsString(expectedValue));
+            response.prettyPrint();
         }
     }
 

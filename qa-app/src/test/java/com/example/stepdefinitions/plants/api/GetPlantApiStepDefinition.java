@@ -32,12 +32,12 @@ public class GetPlantApiStepDefinition {
     @Then("the response status should be {int}")
     public void verifyStatus(int code) {
         response.then().statusCode(code);
+        response.prettyPrint();
     }
 
     @Then("all returned plants must belong to category ID {int}")
     public void verifyCategoryIdMatch(int expectedId) {
-        // This is the core data integrity check
-        // It looks into the 'category' object of every item in the array
+        // looks into the 'category' object of every item in the array
         response.then().body("category.id", everyItem(equalTo(expectedId)));
         response.prettyPrint();
     }
@@ -45,5 +45,6 @@ public class GetPlantApiStepDefinition {
     @Then("the response should include the error message {string}")
     public void verifyErrorMessage(String msg) {
         response.then().body("message", containsString(msg));
+        response.prettyPrint();
     }
 }

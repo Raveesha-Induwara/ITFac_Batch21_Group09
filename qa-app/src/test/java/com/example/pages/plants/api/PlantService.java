@@ -24,10 +24,8 @@ public class PlantService {
     }
 
     public Response createPlantNonAdmin(int categoryId, Map<String, Object> plantData) {
-        // Obtains the request spec with the Bearer token already set
         RequestSpecification request = authService.getAuthenticatedRequest("testuser", "test123");
 
-        // Based on your preference for Query Parameters
         return request
                 .queryParam("categoryId", categoryId)
                 .body(plantData)
@@ -35,7 +33,7 @@ public class PlantService {
     }
 
     public Response createPlantWithoutToken(int categoryId, Map<String, Object> plantData) {
-        return io.restassured.RestAssured.given()
+        return RestAssured.given()
                 .header("Content-Type", "application/json")
                 .pathParam("categoryId", categoryId)
                 .body(plantData)
