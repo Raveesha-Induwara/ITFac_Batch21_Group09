@@ -166,33 +166,21 @@ public class SalesPage {
                 && driver.findElements(sellPlantButton).get(0).isDisplayed();
     }
 
-    // public int getSalesRecordCount() {
-    // wait.until(ExpectedConditions.visibilityOfElementLocated(salesRows));
-    // return driver.findElements(salesRows).size();
-    // }
-
-    // public void clickDeleteOnFirstSalesRecord() {
-    // wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteButton))
-    // .click();
-    // }
-
-    // 
     public String getFirstRowSaleId() {
-    // Wait until the first row is visible
-    WebElement row = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                    By.cssSelector("table tbody tr:first-child")));
+        // Wait until the first row is visible
+        WebElement row = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.cssSelector("table tbody tr:first-child")));
 
-    // Find the form inside the row
-    WebElement form = row.findElement(By.tagName("form"));
-    String actionUrl = form.getAttribute("action"); // e.g., "/ui/sales/delete/100"
+        // Find the form inside the row
+        WebElement form = row.findElement(By.tagName("form"));
+        String actionUrl = form.getAttribute("action"); // e.g., "/ui/sales/delete/100"
 
-    // Extract the saleId (the last segment after the last '/')
-    String saleId = actionUrl.substring(actionUrl.lastIndexOf('/') + 1);
+        // Extract the saleId (the last segment after the last '/')
+        String saleId = actionUrl.substring(actionUrl.lastIndexOf('/') + 1);
 
-    return saleId;
-}
-
+        return saleId;
+    }
 
     public void clickDeleteOnFirstSalesRecord() {
         wait.until(ExpectedConditions.elementToBeClickable(
@@ -225,37 +213,44 @@ public class SalesPage {
     public void waitUntilRowIsRemoved(String saleId) {
 
         // Ensure no alert is blocking the DOM
-    try {
-        driver.switchTo().alert().accept();
-    } catch (NoAlertPresentException ignored) {
-        // No alert present – continue normally
-    }
+        try {
+            driver.switchTo().alert().accept();
+        } catch (NoAlertPresentException ignored) {
+            // No alert present – continue normally
+        }
 
-    wait.until(driver -> driver.findElements(By.cssSelector("table tbody tr"))
-            .stream()
-            .noneMatch(row -> {
-                try {
-                    String formAction = row.findElement(By.tagName("form")).getAttribute("action");
-                    String rowSaleId = formAction.substring(formAction.lastIndexOf('/') + 1);
-                    return rowSaleId.equals(saleId);
-                } catch (NoSuchElementException e) {
-                    return false; // row has no form? ignore it
-                }
-            }));
+        wait.until(driver -> driver.findElements(By.cssSelector("table tbody tr"))
+                .stream()
+                .noneMatch(row -> {
+                    try {
+                        String formAction = row.findElement(By.tagName("form")).getAttribute("action");
+                        String rowSaleId = formAction.substring(formAction.lastIndexOf('/') + 1);
+                        return rowSaleId.equals(saleId);
+                    } catch (NoSuchElementException e) {
+                        return false; // row has no form? ignore it
+                    }
+                }));
     }
 
     public boolean isRowPresent(String saleId) {
         return driver.findElements(By.cssSelector("table tbody tr"))
-            .stream()
-            .anyMatch(row -> {
-                try {
-                    String formAction = row.findElement(By.tagName("form")).getAttribute("action");
-                    String rowSaleId = formAction.substring(formAction.lastIndexOf('/') + 1);
-                    return rowSaleId.equals(saleId);
-                } catch (NoSuchElementException e) {
-                    return false; // row has no form? ignore it
-                }
-            });
+                .stream()
+                .anyMatch(row -> {
+                    try {
+                        String formAction = row.findElement(By.tagName("form")).getAttribute("action");
+                        String rowSaleId = formAction.substring(formAction.lastIndexOf('/') + 1);
+                        return rowSaleId.equals(saleId);
+                    } catch (NoSuchElementException e) {
+                        return false; // row has no form? ignore it
+                    }
+                });
+    }
+
+    public void clickSellButton(String buttonName) {
+        if (buttonName.equalsIgnoreCase("Sell Plant")) {
+            // Wait until the button is clickable, then click
+            wait.until(ExpectedConditions.elementToBeClickable(sellPlantButton)).click();
+        }
     }
 
 }
