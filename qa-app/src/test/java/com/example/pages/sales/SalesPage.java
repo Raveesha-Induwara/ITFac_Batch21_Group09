@@ -1,6 +1,8 @@
 package com.example.pages.sales;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -8,7 +10,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import com.example.utils.DriverFactory;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class SalesPage {
 
@@ -23,22 +29,25 @@ public class SalesPage {
     private By usernameField = By.name("username");
     private By passwordField = By.name("password");
     private By loginButton   = By.className("btn-primary");
+    
+    // Updated selectors with better wait conditions
     private By salesTableRows = By.cssSelector("table tbody tr");
+    private By salesTable = By.tagName("table");
 
-    private By paginationContainer = By.cssSelector("//ul.pagination");
-    private By nextPageButton = By.cssSelector("//ul.pagination li.next a");
+    private By paginationContainer = By.cssSelector("ul.pagination");
+    private By nextPageButton = By.cssSelector("ul.pagination li.next a");
 
-    public void goToLoginPage() {
-        driver.get(DriverFactory.getBaseUrl() + "/ui/login");
-    }
+    private By paginationLinks = By.cssSelector("ul.pagination li.page-item a.page-link");
+    private By sellPlantButton = By.partialLinkText("Sell Plant");
+    private By logoutButton = By.partialLinkText("Logout");
 
-    public void loginAsAdmin() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField))
-                .sendKeys("admin");
+    private By salesRows = By.cssSelector("table tbody tr");
+    private By soldDateColumn = By.cssSelector("table tbody tr td:nth-child(4)"); // adjust selector
+    private By salesSideNavigation = By.partialLinkText("Sales");
 
-        driver.findElement(passwordField).sendKeys("admin123");
-        driver.findElement(loginButton).click();
-    }
+    // Delete action
+    private By firstRowDeleteButton =
+    By.cssSelector("table tbody tr:first-child form button.btn-outline-danger");
 
     public void clickMenuInSideNavigation(String menuName) {
         By menuLocator = By.partialLinkText(menuName);
@@ -59,50 +68,130 @@ public class SalesPage {
                 );
     }
 
-    /** Checks that max 10 records are displayed on the page */
-    public boolean areSalesRecordsWithinPageLimit() {
-        List<WebElement> rows =
-                wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(salesTableRows));
-
-        return rows.size() <= 10;
+    public boolean hasSalesData() {
+        waitForSalesPageToLoad();
+        List<WebElement> rows = driver.findElements(salesRows);
+        return !rows.isEmpty();
     }
 
-    /** Checks whether pagination controls are visible */
+    private void waitForSalesPageToLoad() {
+    wait.until(ExpectedConditions.visibilityOfElementLocated(salesRows));
+    }
+
+
+    private void scrollToPagination() {
+    WebElement pagination = wait.until(
+        ExpectedConditions.visibilityOfElementLocated(paginationContainer)
+    );
+
+    ((JavascriptExecutor) driver)
+            .executeScript("arguments[0].scrollIntoView(true);", pagination);
+    }
+
+    public boolean isSalesSortedBySoldDateDescending() {
+
+        waitForSalesPageToLoad();
+
+        List<WebElement> rows = driver.findElements(salesRows);
+        List<LocalDateTime> soldDates = new ArrayList<>();
+
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        for (WebElement row : rows) {
+            String dateText = row.findElement(soldDateColumn)
+                                .getText()
+                                .trim();
+
+            soldDates.add(LocalDateTime.parse(dateText, formatter));
+        }
+
+        for (int i = 0; i < soldDates.size() - 1; i++) {
+            if (soldDates.get(i).isBefore(soldDates.get(i + 1))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public boolean hasPaginationControls() {
-        List<WebElement> pagination =
-                driver.findElements(paginationContainer);
+        waitForSalesPageToLoad();
+        scrollToPagination();
 
-        return !pagination.isEmpty() && pagination.get(0).isDisplayed();
+        List<WebElement> links = driver.findElements(paginationLinks);
+        return !links.isEmpty() && links.get(0).isDisplayed();
     }
 
-    /** Verifies navigation between pages using pagination */
+
+    public boolean areSalesRecordsWithinPageLimit() {
+        waitForSalesPageToLoad();
+        return driver.findElements(salesRows).size() <= 10;
+    }
+
+
     public boolean canNavigateBetweenPages() {
 
-        List<WebElement> firstPageRows =
-                wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(salesTableRows));
+        waitForSalesPageToLoad();
+        scrollToPagination();
 
-        if (firstPageRows.isEmpty()) {
+        List<WebElement> links = driver.findElements(paginationLinks);
+
+        if (links.size() < 2) {
             return false;
         }
 
-        String firstRowText = firstPageRows.get(0).getText();
+        String firstRowBefore =
+                driver.findElements(salesRows).get(0).getText();
 
-        WebElement nextButton =
-                wait.until(ExpectedConditions.elementToBeClickable(nextPageButton));
-        nextButton.click();
+        for (WebElement link : links) {
+            if (link.getText().equalsIgnoreCase("Next")) {
+                wait.until(ExpectedConditions.elementToBeClickable(link)).click();
+                break;
+            }
+        }
 
         // Wait for table to refresh
-        wait.until(ExpectedConditions.stalenessOf(firstPageRows.get(0)));
+        wait.until(ExpectedConditions.not(
+                ExpectedConditions.textToBePresentInElementLocated(
+                        salesRows, firstRowBefore
+                )
+        ));
 
-        List<WebElement> secondPageRows =
-                wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(salesTableRows));
+        return true;
+    }
 
-        if (secondPageRows.isEmpty()) {
+    public boolean isSellPlantButtonVisible() {
+        return !driver.findElements(sellPlantButton).isEmpty()
+            && driver.findElements(sellPlantButton).get(0).isDisplayed();
+    }
+
+    public int getSalesRecordCount() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(salesRows));
+        return driver.findElements(salesRows).size();
+    }
+
+    public void clickDeleteOnFirstSalesRecord() {
+        wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteButton))
+            .click();
+    }
+
+    public boolean isDeleteConfirmationAlertDisplayed() {
+        try {
+            WebDriverWait alertWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            alertWait.until(ExpectedConditions.alertIsPresent());
+            return true;
+        } catch (TimeoutException e) {
             return false;
         }
-
-        String secondRowText = secondPageRows.get(0).getText();
-
-        return !firstRowText.equals(secondRowText);
     }
+
+    public String getDeleteConfirmationMessage() {
+        return driver.switchTo().alert().getText();
+    }
+
+    public void cancelDeleteConfirmation() {
+        driver.switchTo().alert().dismiss(); // Clicks "Cancel"
+    }
+
 }

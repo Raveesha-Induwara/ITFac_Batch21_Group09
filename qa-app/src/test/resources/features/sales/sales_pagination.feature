@@ -8,9 +8,9 @@ Feature: View Sales Records with Pagination
     Given the user is logged in as an admin
 
   Scenario: Verify sales records are paginated when number of records > 20
-    When the admin clicks on "Sales" in the side navigation
+    When the user clicks on "Sales" in the side navigation
     Then the "Sales" section should be highlighted in the side navigation
-    And the admin should be navigated to the "Sales" page
+    And the user should be navigated to the "Sales" page
     And a maximum of 10 sales records are displayed per page
     Then pagination controls should be displayed when total sales records are greater than 10
-    Then the admin can navigate between pages using the pagination controls
+    Then the user can navigate between pages using the pagination controls

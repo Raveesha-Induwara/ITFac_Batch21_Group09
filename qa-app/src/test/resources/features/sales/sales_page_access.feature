@@ -8,6 +8,6 @@ Feature: Sales page access from side navigation
     Given the user is logged in as an admin
 
   Scenario: Verify a logged in admin can view Sales page from side navigation
-    When the admin clicks on "Sales" in the side navigation
+    When the user clicks on "Sales" in the side navigation
     Then the "Sales" section should be highlighted in the side navigation
-    And the admin should be navigated to the "Sales" page
+    And the user should be navigated to the "Sales" page
