@@ -132,18 +132,18 @@ public class SalesPage {
     }
 
     public boolean canNavigateBetweenPages() {
-
         waitForSalesPageToLoad();
         scrollToPagination();
 
         List<WebElement> links = driver.findElements(paginationLinks);
-
         if (links.size() < 2) {
             return false;
         }
 
-        String firstRowBefore = driver.findElements(salesRows).get(0).getText();
+        // Capture first row WebElement before click
+        WebElement firstRowBefore = driver.findElements(salesRows).get(0);
 
+        // Click Next
         for (WebElement link : links) {
             if (link.getText().equalsIgnoreCase("Next")) {
                 wait.until(ExpectedConditions.elementToBeClickable(link)).click();
@@ -151,10 +151,11 @@ public class SalesPage {
             }
         }
 
-        // Wait for table to refresh
-        wait.until(ExpectedConditions.not(
-                ExpectedConditions.textToBePresentInElementLocated(
-                        salesRows, firstRowBefore)));
+        // Wait for the first row element to become stale (table refreshed)
+        wait.until(ExpectedConditions.stalenessOf(firstRowBefore));
+
+        // Optional: wait for new rows to appear
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(salesRows));
 
         return true;
     }
