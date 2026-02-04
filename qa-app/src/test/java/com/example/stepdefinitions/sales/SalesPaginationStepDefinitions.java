@@ -32,10 +32,6 @@ public class SalesPaginationStepDefinitions {
         for (int i = 100; i < 112; i++) {
             response = salesSeedService.createSale(3, 1); // plantId=1, qty=1
         }
-
-        for (int i = 0; i < 12; i++) {
-            System.out.println("Created Sale Response: " + response);
-        }
     }
 
     @When("a minimum of 11 sales records are displayed per page")

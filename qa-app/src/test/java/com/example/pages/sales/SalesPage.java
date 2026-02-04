@@ -2,6 +2,7 @@ package com.example.pages.sales;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -165,14 +166,37 @@ public class SalesPage {
                 && driver.findElements(sellPlantButton).get(0).isDisplayed();
     }
 
-    public int getSalesRecordCount() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(salesRows));
-        return driver.findElements(salesRows).size();
-    }
+    // public int getSalesRecordCount() {
+    // wait.until(ExpectedConditions.visibilityOfElementLocated(salesRows));
+    // return driver.findElements(salesRows).size();
+    // }
+
+    // public void clickDeleteOnFirstSalesRecord() {
+    // wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteButton))
+    // .click();
+    // }
+
+    // 
+    public String getFirstRowSaleId() {
+    // Wait until the first row is visible
+    WebElement row = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                    By.cssSelector("table tbody tr:first-child")));
+
+    // Find the form inside the row
+    WebElement form = row.findElement(By.tagName("form"));
+    String actionUrl = form.getAttribute("action"); // e.g., "/ui/sales/delete/100"
+
+    // Extract the saleId (the last segment after the last '/')
+    String saleId = actionUrl.substring(actionUrl.lastIndexOf('/') + 1);
+
+    return saleId;
+}
+
 
     public void clickDeleteOnFirstSalesRecord() {
-        wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteButton))
-                .click();
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector("table tbody tr:first-child button.btn-outline-danger"))).click();
     }
 
     public boolean isDeleteConfirmationAlertDisplayed() {
@@ -189,8 +213,49 @@ public class SalesPage {
         return driver.switchTo().alert().getText();
     }
 
+    public void confirmDelete() {
+        wait.until(ExpectedConditions.alertIsPresent());
+        driver.switchTo().alert().accept();
+    }
+
     public void cancelDeleteConfirmation() {
         driver.switchTo().alert().dismiss(); // Clicks "Cancel"
+    }
+
+    public void waitUntilRowIsRemoved(String saleId) {
+
+        // Ensure no alert is blocking the DOM
+    try {
+        driver.switchTo().alert().accept();
+    } catch (NoAlertPresentException ignored) {
+        // No alert present – continue normally
+    }
+
+    wait.until(driver -> driver.findElements(By.cssSelector("table tbody tr"))
+            .stream()
+            .noneMatch(row -> {
+                try {
+                    String formAction = row.findElement(By.tagName("form")).getAttribute("action");
+                    String rowSaleId = formAction.substring(formAction.lastIndexOf('/') + 1);
+                    return rowSaleId.equals(saleId);
+                } catch (NoSuchElementException e) {
+                    return false; // row has no form? ignore it
+                }
+            }));
+    }
+
+    public boolean isRowPresent(String saleId) {
+        return driver.findElements(By.cssSelector("table tbody tr"))
+            .stream()
+            .anyMatch(row -> {
+                try {
+                    String formAction = row.findElement(By.tagName("form")).getAttribute("action");
+                    String rowSaleId = formAction.substring(formAction.lastIndexOf('/') + 1);
+                    return rowSaleId.equals(saleId);
+                } catch (NoSuchElementException e) {
+                    return false; // row has no form? ignore it
+                }
+            });
     }
 
 }
