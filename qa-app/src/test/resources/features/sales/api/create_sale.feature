@@ -38,3 +38,12 @@ Feature: Create sale API
       | qty |
       | 0   |
       | -1  |
+
+   @api-sale-create
+   Scenario: Verify error when selling more than available stock
+    Given an admin authorization token is available
+    And a plant exists with limited stock
+    When the admin sends a POST request to sell quantity greater than available stock
+    Then the response status code should be 400
+    And the error response should contain validation details
+    And no sale should be created for the plant

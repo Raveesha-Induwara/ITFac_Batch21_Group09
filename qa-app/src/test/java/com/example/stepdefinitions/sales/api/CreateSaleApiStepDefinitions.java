@@ -21,6 +21,7 @@ public class CreateSaleApiStepDefinitions {
     private int saleId;
     private int stockBefore;
     private int stockAfter;
+    private int sellQty;
 
     public CreateSaleApiStepDefinitions() {
         this.authService = new AuthService();
@@ -230,6 +231,19 @@ public class CreateSaleApiStepDefinitions {
     public void verifyNoSaleCreated() {
         stockAfter = salesSeedService.getPlantStock(plantId);
         assertEquals(stockBefore, stockAfter);
+    }
+
+    @Given("a plant exists with limited stock")
+    public void plantExistsWithLimitedStock() {
+        plantId = salesSeedService.getAnyPlantId();
+        stockBefore = salesSeedService.getPlantStock(plantId);
+
+        sellQty = stockBefore + 10; // intentionally exceeding stock
+    }
+
+    @When("the admin sends a POST request to sell quantity greater than available stock")
+    public void sendSaleExceedStockRequest() {
+        response = salesSeedService.createSale(plantId, sellQty);
     }
 
 }
