@@ -200,4 +200,9 @@ public class CreateSaleApiStepDefinitions {
         assertNotNull(response.jsonPath().get("soldAt"));
     }
 
+    @When("the non-admin sends a GET request to retrieve sale details with the valid sale id")
+    public void sendGetSaleByIdRequestNonAdmin() {
+        response = salesSeedService.getSaleByIdNonAdmin(saleId);
+    }
+
 }

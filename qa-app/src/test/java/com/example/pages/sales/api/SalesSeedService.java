@@ -137,6 +137,17 @@ public class SalesSeedService {
                 .response();
     }
 
+    public Response getSaleByIdNonAdmin(int saleId) {
+        request = authService.getAuthenticatedRequest("testuser", "test123");
+        return request
+                .pathParam("id", saleId)
+                .when()
+                .get("/api/sales/{id}")
+                .then()
+                .extract()
+                .response();
+    }
+
     public int getAnyExistingSaleIdAdmin() {
         request = authService.getAuthenticatedRequest("admin", "admin123");
         Response response = request
