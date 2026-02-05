@@ -50,4 +50,47 @@ public class PlantService {
                 .pathParam("catId", categoryId)
                 .get("/api/plants/category/{catId}");
     }
+
+    public Response getAllPlants(String username, String password) {
+        return authService.getAuthenticatedRequest(username, password)
+                .get("/api/plants");
+    }
+
+    public Response getAllPlantsWithoutToken() {
+        return RestAssured.given()
+                .get("/api/plants");
+    }
+
+    public Response getPagedPlants(String username, String password, int page, int size) {
+        return authService.getAuthenticatedRequest(username, password)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .get("/api/plants/paged");
+    }
+
+    public Response getPagedPlantsWithoutToken(int page, int size) {
+        return RestAssured.given()
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .get("/api/plants/paged");
+    }
+
+    public Response updatePlant(int plantId, Map<String, Object> plantData, String username, String password) {
+        return authService.getAuthenticatedRequest(username, password)
+                .pathParam("id", plantId)
+                .body(plantData)
+                .put("/api/plants/{id}");
+    }
+
+    public Response deletePlant(int plantId, String username, String password) {
+        return authService.getAuthenticatedRequest(username, password)
+                .pathParam("id", plantId)
+                .delete("/api/plants/{id}");
+    }
+
+    public Response deletePlantWithoutToken(int plantId) {
+        return RestAssured.given()
+                .pathParam("id", plantId)
+                .delete("/api/plants/{id}");
+    }
 }
