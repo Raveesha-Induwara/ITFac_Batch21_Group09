@@ -24,11 +24,28 @@ public class AddCategoryPage {
     private By priceField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[3]/input");
     private By quantityField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[4]/input");
     private By submitBtn = By.xpath("/html/body/div/div/div[2]/div[2]/form/button");
-    private By cancelBtn = By.linkText("Cancel");
+    private By cancelBtn = By.xpath("/html/body/div/div/div[2]/div[2]/form/a");
     private By SubmissionAlertMsg = By.xpath("/html/body/div[1]/div/div[2]/div[2]/div");
 
     // Validation error message locator
     private By validationErrorMsg = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[1]/div");
+    
+    // Edit button in the first row of the table
+    private By firstRowEditBtn = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr[1]/td[4]/a");
+    
+    // Delete button in the first row of the table
+    private By firstRowDeleteBtn = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr[1]/td[4]/form/button");
+    
+    // Table column headers for sorting
+    private By idColumnHeader = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/thead/tr/th[1]");
+    private By nameColumnHeader = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/thead/tr/th[2]");
+    private By parentColumnHeader = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/thead/tr/th[3]");
+    
+    // Table rows and cells for verification
+    private By tableRows = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr");
+    private By firstRowIdCell = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr[1]/td[1]");
+    private By firstRowNameCell = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr[1]/td[2]");
+    private By firstRowParentCell = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr[1]/td[3]");
 
     public AddCategoryPage(WebDriver driver) {
         this.driver = driver;
@@ -147,9 +164,11 @@ public class AddCategoryPage {
 
     public void clickCancel() {
         wait.until(ExpectedConditions.elementToBeClickable(cancelBtn)).click();
+        // Wait for navigation back to categories page
+        wait.until(ExpectedConditions.urlContains("/ui/categories"));
     }
 
-// Method to verify the URL
+    // Method to verify the URL
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
@@ -165,6 +184,115 @@ public class AddCategoryPage {
         } catch (TimeoutException e) {
             return false; // Category not found on the current page
         }
+    }
+    
+    public boolean isEditButtonVisible() {
+        try {
+            WebElement editButton = wait.until(ExpectedConditions.visibilityOfElementLocated(firstRowEditBtn));
+            return editButton.isDisplayed();
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+    
+    public boolean isEditButtonClickable() {
+        try {
+            WebElement editButton = wait.until(ExpectedConditions.elementToBeClickable(firstRowEditBtn));
+            return editButton.isEnabled();
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+    
+    public boolean isDeleteButtonVisible() {
+        try {
+            WebElement deleteButton = wait.until(ExpectedConditions.visibilityOfElementLocated(firstRowDeleteBtn));
+            return deleteButton.isDisplayed();
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+    
+    public boolean isDeleteButtonClickable() {
+        try {
+            WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteBtn));
+            return deleteButton.isEnabled();
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+    
+    // Sorting methods
+    public void clickIdColumnHeader() {
+        wait.until(ExpectedConditions.elementToBeClickable(idColumnHeader)).click();
+        try {
+            Thread.sleep(500); // Wait for sort to complete
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void clickNameColumnHeader() {
+        wait.until(ExpectedConditions.elementToBeClickable(nameColumnHeader)).click();
+        try {
+            Thread.sleep(500); // Wait for sort to complete
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void clickParentColumnHeader() {
+        wait.until(ExpectedConditions.elementToBeClickable(parentColumnHeader)).click();
+        try {
+            Thread.sleep(500); // Wait for sort to complete
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public java.util.List<String> getCategoryIds() {
+        java.util.List<String> ids = new java.util.ArrayList<>();
+        java.util.List<WebElement> rows = driver.findElements(tableRows);
+        
+        for (WebElement row : rows) {
+            try {
+                WebElement idCell = row.findElement(By.xpath("./td[1]"));
+                ids.add(idCell.getText().trim());
+            } catch (Exception e) {
+                // Skip if cell not found
+            }
+        }
+        return ids;
+    }
+    
+    public java.util.List<String> getCategoryNames() {
+        java.util.List<String> names = new java.util.ArrayList<>();
+        java.util.List<WebElement> rows = driver.findElements(tableRows);
+        
+        for (WebElement row : rows) {
+            try {
+                WebElement nameCell = row.findElement(By.xpath("./td[2]"));
+                names.add(nameCell.getText().trim());
+            } catch (Exception e) {
+                // Skip if cell not found
+            }
+        }
+        return names;
+    }
+    
+    public java.util.List<String> getCategoryParents() {
+        java.util.List<String> parents = new java.util.ArrayList<>();
+        java.util.List<WebElement> rows = driver.findElements(tableRows);
+        
+        for (WebElement row : rows) {
+            try {
+                WebElement parentCell = row.findElement(By.xpath("./td[3]"));
+                parents.add(parentCell.getText().trim());
+            } catch (Exception e) {
+                // Skip if cell not found
+            }
+        }
+        return parents;
     }
    
 }

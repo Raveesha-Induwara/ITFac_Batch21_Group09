@@ -11,7 +11,7 @@ public class AuthService {
 
 
     public AuthService() {
-        RestAssured.baseURI = "http://localhost:8080"; // Replace with your actual API URL
+        RestAssured.baseURI = "http://localhost:8081";
     }
 
     public Response login(String username, String password) {
