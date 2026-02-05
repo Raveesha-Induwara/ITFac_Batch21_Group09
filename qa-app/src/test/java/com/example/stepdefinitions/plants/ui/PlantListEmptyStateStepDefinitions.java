@@ -1,7 +1,7 @@
-package com.example.stepdefinitions.plants;
+package com.example.stepdefinitions.plants.ui;
 
-import com.example.pages.plants.PlantListPage;
-import com.example.pages.plants.AddPlantPage;
+import com.example.pages.plants.ui.PlantListPage;
+import com.example.pages.plants.ui.AddPlantPage;
 import com.example.stepdefinitions.Hooks;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;

@@ -1,4 +1,4 @@
-package com.example.pages.plants;
+package com.example.pages.plants.ui;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
