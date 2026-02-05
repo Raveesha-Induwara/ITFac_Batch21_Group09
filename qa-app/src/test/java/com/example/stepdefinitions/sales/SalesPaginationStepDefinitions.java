@@ -27,7 +27,10 @@ public class SalesPaginationStepDefinitions {
 
     @Given("there are more than 10 sales records in the system")
     public void seedSalesData() {
-
+        if (salesSeedService.getSalesCount() > 10) {
+            return; 
+            
+        }
         // create 12 sales records
         for (int i = 100; i < 112; i++) {
             response = salesSeedService.createSale(3, 1); // plantId=1, qty=1
