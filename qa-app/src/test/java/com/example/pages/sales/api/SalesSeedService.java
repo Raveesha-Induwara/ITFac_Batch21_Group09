@@ -2,6 +2,7 @@ package com.example.pages.sales.api;
 
 import java.util.List;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -75,6 +76,35 @@ public class SalesSeedService {
                 .getList("plant.id");
 
         return plantIds.contains(plantId);
+    }
+
+    public boolean isSalePresent(int saleId) {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+
+        Response response = request.get("/api/sales/" + saleId);
+
+        return response.getStatusCode() == 200;
+    }
+
+    // Delete a sale with admin token
+    public Response deleteSaleAdmin(int saleId) {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+
+        return request
+                .delete("/api/sales/" + saleId)
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response deleteSaleNonAdmin(int saleId) {
+        request = authService.getAuthenticatedRequest("testuser", "test123");
+
+        return request
+                .delete("/api/sales/" + saleId)
+                .then()
+                .extract()
+                .response();
     }
 
 }

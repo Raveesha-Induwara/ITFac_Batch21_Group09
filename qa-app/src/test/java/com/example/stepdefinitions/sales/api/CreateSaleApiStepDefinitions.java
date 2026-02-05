@@ -15,6 +15,7 @@ public class CreateSaleApiStepDefinitions {
     private int plantId;
     private int quantity;
     private AuthService authService;
+    private int saleId;
 
     public CreateSaleApiStepDefinitions() {
         this.authService = new AuthService();
@@ -98,6 +99,39 @@ public class CreateSaleApiStepDefinitions {
 
         // Use a method in SalesSeedService for unauthenticated request
         response = salesSeedService.createSaleWithoutAuth(plantId, quantity);
+    }
+
+    @Given("a sale with id {int} exists")
+    public void aSaleWithIdExists(Integer id) {
+        saleId = id;
+        assertTrue("Sale does not exist", salesSeedService.isSalePresent(saleId));
+    }
+
+    @When("the admin sends DELETE request to delete sale with id {int}")
+    public void adminSendsDeleteRequest(Integer id) {
+        response = salesSeedService.deleteSaleAdmin(id);
+    }
+
+    @Then("the sale should be deleted successfully")
+    public void saleShouldBeDeletedSuccessfully() {
+        boolean exists = salesSeedService.isSalePresent(saleId);
+        assertFalse("Sale was not deleted", exists);
+    }
+
+    @Then("the response body should be empty")
+    public void responseBodyShouldBeEmpty() {
+        assertTrue("Response body is not empty", response.getBody().asString().isEmpty());
+    }
+
+    @When("the non-admin sends DELETE request to delete sale with id {int}")
+    public void nonAdminSendsDeleteRequest(Integer id) {
+        response = salesSeedService.deleteSaleNonAdmin(id);
+    }
+
+    @Then("the sale should not be deleted successfully")
+    public void saleShouldNotBeDeletedSuccessfully() {
+        boolean exists = salesSeedService.isSalePresent(saleId);
+        assertTrue("Sale was deleted unexpectedly", exists);
     }
 
 }
