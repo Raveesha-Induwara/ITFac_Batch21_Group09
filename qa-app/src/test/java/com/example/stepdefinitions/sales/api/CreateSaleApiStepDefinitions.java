@@ -179,4 +179,25 @@ public class CreateSaleApiStepDefinitions {
         response = salesSeedService.getAllSalesNonAdmin();
     }
 
+    @Given("a valid sale id exists")
+    public void validSaleIdExists() {
+        // You can fetch an existing sale id from DB or create one
+        saleId = salesSeedService.getAnyExistingSaleIdAdmin();
+        assertTrue(saleId > 0);
+    }
+
+    @When("the admin sends a GET request to retrieve sale details with the valid sale id")
+    public void sendGetSaleByIdRequest() {
+        response = salesSeedService.getSaleByIdAdmin(saleId);
+    }
+
+    @Then("the response body should contain sale details")
+    public void verifySaleDetails() {
+        assertNotNull(response.jsonPath().get("id"));
+        assertNotNull(response.jsonPath().get("plant"));
+        assertNotNull(response.jsonPath().get("quantity"));
+        assertNotNull(response.jsonPath().get("totalPrice"));
+        assertNotNull(response.jsonPath().get("soldAt"));
+    }
+
 }

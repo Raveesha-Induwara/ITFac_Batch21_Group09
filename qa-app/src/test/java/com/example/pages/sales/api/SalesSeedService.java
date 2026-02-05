@@ -126,4 +126,27 @@ public class SalesSeedService {
         return request.get("/api/sales");
     }
 
+    public Response getSaleByIdAdmin(int saleId) {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+        return request
+                .pathParam("id", saleId)
+                .when()
+                .get("/api/sales/{id}")
+                .then()
+                .extract()
+                .response();
+    }
+
+    public int getAnyExistingSaleIdAdmin() {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+        Response response = request
+                .when()
+                .get("/api/sales")
+                .then()
+                .extract()
+                .response();
+
+        return response.jsonPath().get("[0].id");
+    }
+
 }
