@@ -19,10 +19,6 @@ public class SalesPaginationStepDefinitions {
     public SalesPaginationStepDefinitions() {
         this.salesPage = new SalesPage(
                 com.example.stepdefinitions.Hooks.getDriver());
-        AuthService authService = new AuthService();
-        RequestSpecification authRequest = authService.getAuthenticatedRequest("admin", "admin123");
-
-        this.salesSeedService = new SalesSeedService(authRequest);
     }
 
     @Given("there are more than 10 sales records in the system")
@@ -32,7 +28,7 @@ public class SalesPaginationStepDefinitions {
             
         }
         // create 12 sales records
-        for (int i = 100; i < 112; i++) {
+        for (int i = 0; i < 12; i++) {
             response = salesSeedService.createSale(3, 1); // plantId=1, qty=1
         }
     }
