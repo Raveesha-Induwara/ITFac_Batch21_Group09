@@ -15,14 +15,14 @@ public class SearchPlant {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    // Locators
+
     private By searchBar = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[1]/input");
     private By searchBtn = By.xpath("//button[text()='Search']");
-    // Using the table body path you provided
+    private By resetBtn = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[3]/a[1]");
+
     private By tableBody = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody");
-// Locators based on your provided XPaths
+
     private By categorySelect = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[2]/select");
-    // This finds the 2nd column (Category) for ALL rows in the table body
     private By categoryColumnCells = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr/td[2]");
 
     public SearchPlant(WebDriver driver) {
@@ -45,14 +45,45 @@ public class SearchPlant {
         driver.findElement(searchBtn).click();
     }
 
+    public void clickReset() {
+        WebElement resetButton = wait.until(ExpectedConditions.elementToBeClickable(resetBtn));
+        resetButton.click();
+    }
+
+    public String getSearchBarValue() {
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(searchBar));
+        return input.getAttribute("value");
+    }
+
+    public String getSelectedCategory() {
+        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(categorySelect));
+        Select select = new Select(dropdown);
+        return select.getFirstSelectedOption().getText();
+    }
+
+    public boolean isSearchBarEmpty() {
+        String value = getSearchBarValue();
+        return value == null || value.trim().isEmpty();
+    }
+
+    public boolean isCategoryFilterReset() {
+        String selectedCategory = getSelectedCategory();
+        return selectedCategory.equalsIgnoreCase("All Categories");
+    }
+
 
     public int getResultCount() {
         try {
+            Thread.sleep(500); // Wait for table to update
             WebElement body = driver.findElement(tableBody);
             return body.findElements(By.tagName("tr")).size();
         } catch (Exception e) {
             return 0;
         }
+    }
+    
+    public String getInitialCategoryValue() {
+        return getSelectedCategory();
     }
     public boolean areAllResultsMatching(String expectedCategory) {
         // Wait for results to load
