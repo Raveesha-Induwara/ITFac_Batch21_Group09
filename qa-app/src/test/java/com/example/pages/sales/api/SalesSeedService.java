@@ -121,4 +121,9 @@ public class SalesSeedService {
         return request.get("/api/sales");
     }
 
+    public Response getAllSalesNonAdmin() {
+        request = authService.getAuthenticatedRequest("testuser", "test123");
+        return request.get("/api/sales");
+    }
+
 }

@@ -8,3 +8,12 @@ Feature: Retrieve all sales API
     Then the response status code should be 200
     And the response should contain a list of sales
     And each sale should contain valid sale details
+
+  @api-sales-get-all
+  Scenario: Verify Non-Admin can retrieve all sales successfully
+    Given a non-admin authorization token is available
+    And sales records exist in the system
+    When the non-admin sends GET request to retrieve all sales
+    Then the response status code should be 200
+    And the response should contain a list of sales
+    And each sale should contain valid sale details

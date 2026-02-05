@@ -174,4 +174,9 @@ public class CreateSaleApiStepDefinitions {
         }
     }
 
+    @When("the non-admin sends GET request to retrieve all sales")
+    public void nonAdminSendsGetRequest() {
+        response = salesSeedService.getAllSalesNonAdmin();
+    }
+
 }
