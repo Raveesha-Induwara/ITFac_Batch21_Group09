@@ -41,6 +41,16 @@ public class SalesSeedService {
                 .response();
     }
 
+    public Response createSaleWithoutAuth(int plantId, int quantity) {
+        return io.restassured.RestAssured.given()
+                .queryParam("quantity", quantity)
+                .pathParam("plantId", plantId)
+                .post("/api/sales/plant/{plantId}")
+                .then()
+                .extract()
+                .response();
+    }
+
     public int getSalesCount() {
         request = authService.getAuthenticatedRequest("admin", "admin123");
 

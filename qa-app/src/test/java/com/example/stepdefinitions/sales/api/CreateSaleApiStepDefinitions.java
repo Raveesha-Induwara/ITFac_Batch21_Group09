@@ -86,4 +86,18 @@ public class CreateSaleApiStepDefinitions {
         assertEquals(message, error);
     }
 
+    @Given("no authorization token is provided")
+    public void noAuthorizationTokenIsProvided() {
+        // no token will be used
+    }
+
+    @When("the unauthorized user sends POST request to sell plant with id {int} and quantity {int}")
+    public void theUserSendsPostRequest(Integer id, Integer qty) {
+        plantId = id;
+        quantity = qty;
+
+        // Use a method in SalesSeedService for unauthenticated request
+        response = salesSeedService.createSaleWithoutAuth(plantId, quantity);
+    }
+
 }
