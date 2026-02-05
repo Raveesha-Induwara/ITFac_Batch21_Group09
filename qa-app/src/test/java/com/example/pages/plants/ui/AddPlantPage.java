@@ -1,4 +1,4 @@
-package com.example.pages.plants;
+package com.example.pages.plants.ui;
 
 import java.time.Duration;
 

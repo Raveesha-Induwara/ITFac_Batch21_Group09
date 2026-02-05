@@ -1,11 +1,10 @@
 package com.example.stepdefinitions.dashboard;
 
 import static org.junit.Assert.assertTrue;
-
 import org.openqa.selenium.WebDriver;
 
 import com.example.pages.dashboard.DashboardPage;
-import com.example.pages.login.LoginPage;
+import com.example.pages.login.ui.LoginPage;
 import com.example.stepdefinitions.Hooks;
 
 import io.cucumber.java.en.Then;
