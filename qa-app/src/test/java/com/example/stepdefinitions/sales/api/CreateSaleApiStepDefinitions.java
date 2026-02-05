@@ -19,6 +19,8 @@ public class CreateSaleApiStepDefinitions {
     private int quantity;
     private AuthService authService;
     private int saleId;
+    private int stockBefore;
+    private int stockAfter;
 
     public CreateSaleApiStepDefinitions() {
         this.authService = new AuthService();
@@ -203,6 +205,31 @@ public class CreateSaleApiStepDefinitions {
     @When("the non-admin sends a GET request to retrieve sale details with the valid sale id")
     public void sendGetSaleByIdRequestNonAdmin() {
         response = salesSeedService.getSaleByIdNonAdmin(saleId);
+    }
+
+    @Given("a valid plant id exists")
+    public void validPlantIdExists() {
+        plantId = salesSeedService.getAnyPlantId();
+        stockBefore = salesSeedService.getPlantStock(plantId);
+    }
+
+    @When("the admin sends a POST request to sell plant with quantity {int}")
+    public void sendInvalidSaleRequest(int qty) {
+        response = salesSeedService.createSale(plantId, qty);
+    }
+
+    @Then("the error response should contain validation details")
+    public void verifyValidationError() {
+        assertNotNull(response.jsonPath().get("status"));
+        assertNotNull(response.jsonPath().get("error"));
+        assertNotNull(response.jsonPath().get("message"));
+        assertNotNull(response.jsonPath().get("timestamp"));
+    }
+
+    @Then("no sale should be created for the plant")
+    public void verifyNoSaleCreated() {
+        stockAfter = salesSeedService.getPlantStock(plantId);
+        assertEquals(stockBefore, stockAfter);
     }
 
 }

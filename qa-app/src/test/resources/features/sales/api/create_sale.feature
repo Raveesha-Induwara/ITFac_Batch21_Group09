@@ -24,3 +24,17 @@ Feature: Create sale API
     When the unauthorized user sends POST request to sell plant with id 3 and quantity 2
     Then the response status code should be 401
     And the response should contain error message "UNAUTHORIZED"
+
+  @api-sale-create
+  Scenario Outline: Verify error when invalid quantity is used
+    Given an admin authorization token is available
+    And a valid plant id exists
+    When the admin sends a POST request to sell plant with quantity <qty>
+    Then the response status code should be 400
+    And the error response should contain validation details
+    And no sale should be created for the plant
+
+    Examples:
+      | qty |
+      | 0   |
+      | -1  |

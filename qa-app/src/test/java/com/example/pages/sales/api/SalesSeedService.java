@@ -25,7 +25,6 @@ public class SalesSeedService {
                 .pathParam("plantId", plantId)
                 .post("/api/sales/plant/{plantId}")
                 .then()
-                .statusCode(201)
                 .extract()
                 .response();
     }
@@ -158,6 +157,33 @@ public class SalesSeedService {
                 .response();
 
         return response.jsonPath().get("[0].id");
+    }
+
+    public int getAnyPlantId() {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+
+        Response response = request
+                .when()
+                .get("/api/plants")
+                .then()
+                .extract()
+                .response();
+
+        return response.jsonPath().get("[0].id");
+    }
+
+    public int getPlantStock(int plantId) {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+
+        Response response = request
+                .pathParam("id", plantId)
+                .when()
+                .get("/api/plants/{id}")
+                .then()
+                .extract()
+                .response();
+
+        return response.jsonPath().getInt("quantity");
     }
 
 }
