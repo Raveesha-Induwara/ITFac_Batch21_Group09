@@ -107,4 +107,18 @@ public class SalesSeedService {
                 .response();
     }
 
+    public boolean salesExistAdmin() {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+
+        Response response = request.get("/api/sales");
+
+        List<Object> sales = response.jsonPath().getList("$");
+        return sales != null && sales.size() > 0;
+    }
+
+    public Response getAllSalesAdmin() {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+        return request.get("/api/sales");
+    }
+
 }

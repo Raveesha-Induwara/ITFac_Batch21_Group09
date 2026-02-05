@@ -5,6 +5,9 @@ import io.restassured.response.Response;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+import java.util.Map;
+
 import com.example.pages.login.api.AuthService;
 import com.example.pages.sales.api.SalesSeedService;
 
@@ -132,6 +135,43 @@ public class CreateSaleApiStepDefinitions {
     public void saleShouldNotBeDeletedSuccessfully() {
         boolean exists = salesSeedService.isSalePresent(saleId);
         assertTrue("Sale was deleted unexpectedly", exists);
+    }
+
+    @Given("sales records exist in the system")
+    public void salesRecordsExist() {
+        assertTrue("No sales exist in system", salesSeedService.salesExistAdmin());
+    }
+
+    @When("the admin sends GET request to retrieve all sales")
+    public void adminSendsGetRequest() {
+        response = salesSeedService.getAllSalesAdmin();
+    }
+
+    @Then("the response should contain a list of sales")
+    public void responseShouldContainSalesList() {
+        List<Object> sales = response.jsonPath().getList("$");
+        assertNotNull(sales);
+        assertTrue(sales.size() > 0);
+    }
+
+    @Then("each sale should contain valid sale details")
+    public void eachSaleShouldContainValidDetails() {
+
+        List<Map<String, Object>> sales = response.jsonPath().getList("$");
+
+        for (Map<String, Object> sale : sales) {
+
+            assertNotNull(sale.get("id"));
+            assertNotNull(sale.get("quantity"));
+            assertNotNull(sale.get("soldAt"));
+            assertNotNull(sale.get("totalPrice"));
+
+            Map<String, Object> plant = (Map<String, Object>) sale.get("plant");
+            assertNotNull(plant);
+            assertNotNull(plant.get("id"));
+            assertNotNull(plant.get("name"));
+            assertNotNull(plant.get("price"));
+        }
     }
 
 }
