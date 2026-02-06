@@ -20,10 +20,12 @@ public class CategoryGetByIdStepDefinitions {
     @Then("dthe response should contain category with name {string}")
     public void dTheResponseShouldContainCategoryWithName(String expectedName) {
         Response response = CategoryApiContext.getResponse();
-        if (response.statusCode() == 200) {
-            response.then().body("name", equalTo(expectedName));
-        } else if (response.statusCode() == 404) {
-            response.then().body("message", containsString(expectedName));
-        }
+        response.then().body("name", equalTo(expectedName));
+    }
+
+    @Then("dthe error message should indicate category not found")
+    public void dTheErrorMessageShouldIndicateCategoryNotFound() {
+        Response response = CategoryApiContext.getResponse();
+        response.then().body("message", containsString("Category not found"));
     }
 }

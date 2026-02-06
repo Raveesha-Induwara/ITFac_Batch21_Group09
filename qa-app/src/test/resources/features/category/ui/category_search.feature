@@ -14,4 +14,12 @@ Feature: Category Search Validation
       | category_name | description       |
       | one two | Name with spaces  |
       | one  | Single word name  |
-      | mis  | Single word name  |
+
+  Scenario Outline: Verify search returns no results for non-existent categories
+    When dthe user enters "<category_name>" into the search bar
+    And dthe user clicks the search button
+    Then dno results should be displayed in the table
+
+    Examples:
+      | category_name | description       |
+      | mis  | Non-existent category  |
