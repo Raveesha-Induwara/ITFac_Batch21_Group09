@@ -1,4 +1,4 @@
-package com.example.stepdefinitions.sales;
+package com.example.stepdefinitions.sales.ui;
 
 import io.cucumber.java.en.*;
 import static org.junit.Assert.assertTrue;
@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.WebDriver;
 
 import com.example.pages.Common;
-import com.example.pages.sales.SalesPage;
+import com.example.pages.sales.ui.SalesPage;
 import com.example.stepdefinitions.Hooks;
 
 public class SalesPageAccessStepDefinitions {

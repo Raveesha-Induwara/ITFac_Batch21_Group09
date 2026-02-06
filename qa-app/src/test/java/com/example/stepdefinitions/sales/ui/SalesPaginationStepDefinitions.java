@@ -1,4 +1,4 @@
-package com.example.stepdefinitions.sales;
+package com.example.stepdefinitions.sales.ui;
 
 import io.cucumber.java.en.*;
 import io.restassured.specification.RequestSpecification;
@@ -7,8 +7,8 @@ import io.restassured.response.Response;
 import static org.junit.Assert.assertTrue;
 
 import com.example.pages.login.api.AuthService;
-import com.example.pages.sales.SalesPage;
 import com.example.pages.sales.api.SalesSeedService;
+import com.example.pages.sales.ui.SalesPage;
 
 public class SalesPaginationStepDefinitions {
 
@@ -19,6 +19,7 @@ public class SalesPaginationStepDefinitions {
     public SalesPaginationStepDefinitions() {
         this.salesPage = new SalesPage(
                 com.example.stepdefinitions.Hooks.getDriver());
+        this.salesSeedService = new SalesSeedService();
     }
 
     @Given("there are more than 10 sales records in the system")

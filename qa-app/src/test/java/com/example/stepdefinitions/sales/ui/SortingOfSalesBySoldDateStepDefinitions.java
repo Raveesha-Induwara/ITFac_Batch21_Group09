@@ -1,10 +1,9 @@
-package com.example.stepdefinitions.sales;
+package com.example.stepdefinitions.sales.ui;
 
 import io.cucumber.java.en.*;
 import static org.junit.Assert.assertTrue;
 
-
-import com.example.pages.sales.SalesPage;
+import com.example.pages.sales.ui.SalesPage;
 
 public class SortingOfSalesBySoldDateStepDefinitions {
 

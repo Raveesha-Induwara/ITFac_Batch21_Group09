@@ -1,9 +1,9 @@
-package com.example.stepdefinitions.sales;
+package com.example.stepdefinitions.sales.ui;
 
 import static org.junit.Assert.assertTrue;
 
-import com.example.pages.sales.SalesPage;
-import com.example.pages.sales.SellPlantPage;
+import com.example.pages.sales.ui.SalesPage;
+import com.example.pages.sales.ui.SellPlantPage;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

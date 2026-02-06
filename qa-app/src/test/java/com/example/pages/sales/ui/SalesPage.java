@@ -1,4 +1,4 @@
-package com.example.pages.sales;
+package com.example.pages.sales.ui;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
