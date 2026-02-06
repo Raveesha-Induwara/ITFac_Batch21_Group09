@@ -1,5 +1,5 @@
 @214009F @delete_plant
-Feature: Plant Deletion API Validation
+Feature: API: Plant Deletion API Validation
 
   Scenario Outline: Verify successful deletion of plant by ID
     When I delete plant with ID <plantId> using "<user>" credentials

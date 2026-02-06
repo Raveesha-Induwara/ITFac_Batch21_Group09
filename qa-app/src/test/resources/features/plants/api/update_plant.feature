@@ -1,5 +1,5 @@
 @214009F @plant_update_validation
-Feature: Plant Update API Validation
+Feature: API: Plant Update API Validation
 
   Scenario Outline: Verify plant update with different validation cases
     When I update plant <plantId> with name "<name>" price <price> quantity <quantity> subCategory <subCategoryId> using "<user>" credentials
