@@ -99,9 +99,9 @@ public class CreateSaleApiStepDefinitions {
         assertTrue("Sale does not exist", salesSeedService.isSalePresent(saleId));
     }
 
-    @When("the admin sends DELETE request to delete sale with id {int}")
-    public void adminSendsDeleteRequest(Integer id) {
-        response = salesSeedService.deleteSaleAdmin(id);
+    @When("the admin sends DELETE request to delete sale")
+    public void adminSendsDeleteRequest() {
+        response = salesSeedService.deleteSaleAdmin(saleId);
     }
 
     @Then("the sale should be deleted successfully")
@@ -115,9 +115,9 @@ public class CreateSaleApiStepDefinitions {
         assertTrue("Response body is not empty", response.getBody().asString().isEmpty());
     }
 
-    @When("the non-admin sends DELETE request to delete sale with id {int}")
-    public void nonAdminSendsDeleteRequest(Integer id) {
-        response = salesSeedService.deleteSaleNonAdmin(id);
+    @When("the non-admin sends DELETE request to delete sale")
+    public void nonAdminSendsDeleteRequest() {
+        response = salesSeedService.deleteSaleNonAdmin(saleId);
     }
 
     @Then("the sale should not be deleted successfully")

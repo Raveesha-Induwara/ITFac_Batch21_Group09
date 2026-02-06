@@ -29,7 +29,7 @@ public class SalesPaginationStepDefinitions {
         }
         // create 12 sales records
         for (int i = 0; i < 12; i++) {
-            response = salesSeedService.createSale(3, 1); // plantId=1, qty=1
+            response = salesSeedService.createSaleAsAdmin(3, 1); 
         }
     }
 
