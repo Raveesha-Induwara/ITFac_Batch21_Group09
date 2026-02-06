@@ -24,7 +24,6 @@ public class PlantListPaginationStepDefinitions {
 
     @Given("at least {int} plants exist in the system")
     public void ensurePlantsExist(int requiredCount) {
-        // First, check current plant count
         addPlantPage.navigateToPlantPage();
         try {
             Thread.sleep(1000); // Wait for page to load

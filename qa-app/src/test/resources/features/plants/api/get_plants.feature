@@ -45,7 +45,6 @@ Feature: Plant Retrieval API Validation
     Then the response status should be 401
     And the response should include the error message "Unauthorized"
 
-  @214009F @positive
   Scenario Outline: Verify plants returned match the requested category
     When I retrieve plants for category <catId> using "<user>" credentials
     Then the response status should be 200
@@ -56,7 +55,6 @@ Feature: Plant Retrieval API Validation
       | 2     | admin |
       | 2     | testuser |
 
-  @214009F @negative
   Scenario: Verify unauthenticated users cannot retrieve plant lists
     When I retrieve plants for category 2 without a token
     Then the response status should be 401

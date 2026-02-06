@@ -1,11 +1,10 @@
 @214009F @plant_list_pagination
-Feature: Plant List with Pagination
+Feature: UI: Plant List with Pagination
 
   Background:
     Given the user is logged in as an admin
     And the user is on the "plants" page
 
-  @214009F
   Scenario: Verify pagination is visible when number of plants exceeds page size
     Given at least 11 plants exist in the system
     Then the plant list should be displayed
@@ -13,7 +12,6 @@ Feature: Plant List with Pagination
     And the user should be on page 1
     And the Previous button should be "disabled"
 
-  @214009F
   Scenario: Navigate to next page (only if pagination exists)
     Given at least 11 plants exist in the system
     Then pagination controls should be displayed according to data size
@@ -21,7 +19,6 @@ Feature: Plant List with Pagination
     Then the user should move to the next page
     And the Previous button should be "enabled"
 
-  @214009F
   Scenario: Navigate back to previous page (only if pagination exists)
     Given at least 11 plants exist in the system
     And the user is on page 2
@@ -29,7 +26,6 @@ Feature: Plant List with Pagination
     Then the user should move to the previous page
     And the user should be on page 1
 
-  @214009F
   Scenario: Direct page navigation (only if pagination exists)
     Given at least 11 plants exist in the system
     Then pagination controls should be displayed according to data size

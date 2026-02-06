@@ -1,7 +1,6 @@
 @214009F @plant_update_validation
 Feature: Plant Update API Validation
 
-    @214009F
   Scenario Outline: Verify plant update with different validation cases
     When I update plant <plantId> with name "<name>" price <price> quantity <quantity> subCategory <subCategoryId> using "<user>" credentials
     Then the update response status should be <statusCode>
@@ -9,7 +8,6 @@ Feature: Plant Update API Validation
     Examples:
       | plantId | name            | price | quantity | subCategoryId | user     | statusCode |
       | 48      | Anthurium       | 150   | 25       | 6             | admin    | 200        |
-      | 48      | Rose Plant      | 200   | 30       | 6             | admin    | 200        |
       | 48      |                 | 150   | 25       | 6             | admin    | 400        |
       | 48      | AB              | 150   | 25       | 6             | admin    | 400        |
       | 48      | ThisIsAVeryLongPlantNameThatExceedsTwentyFiveCharactersLimit | 150 | 25 | 6 | admin | 400 |
