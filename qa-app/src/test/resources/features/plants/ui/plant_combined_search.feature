@@ -14,5 +14,5 @@ Feature: Combined Plant Search Validation
 
     Examples:
       | name      | category |
-      | rdtfjgh   | spicy    |
       | Anthurium | rose     |
+      | rdtfjgh   | spicy    |

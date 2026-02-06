@@ -1,4 +1,4 @@
-@214013L
+@214013L @bug
 Feature: Plant Search Validation
 
   Background:
@@ -13,5 +13,6 @@ Feature: Plant Search Validation
 
     Examples:
       | plant_name | description       |
-      | black rose | Name with spaces  |
       | Anthurium  | Single word name  |
+      | black rose | Name with spaces  |
+      
