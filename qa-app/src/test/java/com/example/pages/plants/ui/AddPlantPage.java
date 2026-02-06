@@ -37,16 +37,17 @@ public class AddPlantPage {
 
     public void navigateToPlantPage() {
         String targetUrl = DriverFactory.getBaseUrl() + "/ui/plants";
-        
-        try {
-            if (!driver.getCurrentUrl().equals(targetUrl)) {
-                driver.get(targetUrl);
-            }
-            
-        } catch (TimeoutException e) {
-            driver.navigate().refresh();
-            wait.until(ExpectedConditions.elementToBeClickable(addPlantBtn));
+
+        // Wait for the browser to finish any pending transitions (The "Best Practice" sleep)
+        wait.until(d -> ((org.openqa.selenium.JavascriptExecutor) d)
+                .executeScript("return document.readyState").equals("complete"));
+
+        if (!driver.getCurrentUrl().equals(targetUrl)) {
+            driver.get(targetUrl);
         }
+
+        // Ensure we are actually there before proceeding
+        wait.until(ExpectedConditions.urlContains("/ui/plants"));
     }
 
     public boolean isOnPlantPage() {
@@ -116,20 +117,17 @@ public class AddPlantPage {
     public String AlertMsg() {
 
         try {
-            // Wait for the message to appear
             WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(SubmissionAlertMsg));
             return messageElement.getText();
         } catch (TimeoutException e) {
             return "No message displayed";
         }
     }
-    // Method to click cancel
 
     public void clickCancel() {
         wait.until(ExpectedConditions.elementToBeClickable(cancelBtn)).click();
     }
 
-// Method to verify the URL
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
