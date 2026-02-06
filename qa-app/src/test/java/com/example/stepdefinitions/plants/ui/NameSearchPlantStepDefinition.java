@@ -33,10 +33,9 @@ public class NameSearchPlantStepDefinition {
 
     @Then("only the plant {string} should be displayed in the results table")
     public void verifySearchResults(String plantName) {
-        // 1. Check if the plant is there
         boolean isFound = plantPage.isPlantNameVisibleInTable(plantName);
         Assert.assertTrue("Searched plant not found!", isFound);
-        // 2. Check that only one result is returned
+
         int count = searchPage.getResultCount();
         Assert.assertTrue("Search returned more than expected results. Count: " + count, count >= 1);
     }

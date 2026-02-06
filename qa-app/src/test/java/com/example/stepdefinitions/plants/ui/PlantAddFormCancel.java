@@ -21,7 +21,6 @@ public void clickCancelButton() {
 
 @Then("the system should navigate back to the {string} page")
 public void verifyNavigation(String pageName) {
-    // We check if the URL contains the expected path (e.g., /ui/plants)
     String expectedPath = "/ui/" + pageName;
     String actualUrl = addPlantPage.getCurrentUrl();
     
