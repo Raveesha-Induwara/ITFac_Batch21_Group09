@@ -89,8 +89,9 @@ public class PlantListPage {
         return !prevLi.getAttribute("class").contains("disabled");
     }
 
-
-
+    /* -------------------------------
+       NAVIGATION
+       ------------------------------- */
 
     public void goToNextPage() {
         click(nextButton);
@@ -102,13 +103,9 @@ public class PlantListPage {
         waitForPageReload();
     }
 
-    public void goToPage(int pageNumber) {
-        By pageLink = By.xpath("//a[@class='page-link' and text()='" + pageNumber + "']");
-        click(pageLink);
-        waitForPageReload();
-    }
-
-
+    /* -------------------------------
+       HELPERS
+       ------------------------------- */
 
     private void click(By locator) {
         try {
@@ -124,6 +121,7 @@ public class PlantListPage {
             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
         }
     }
+
     private void waitForPageReload() {
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(plantRows));
     }
