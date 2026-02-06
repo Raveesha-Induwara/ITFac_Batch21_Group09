@@ -3,7 +3,6 @@ package com.example.pages.sales.api;
 import java.util.List;
 import java.util.Map;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -18,7 +17,7 @@ public class SalesSeedService {
         this.authService = new AuthService();
     }
 
-    public Response createSale(int plantId, int quantity) {
+    public Response createSaleAsAdmin(int plantId, int quantity) {
         request = authService.getAuthenticatedRequest("admin", "admin123");
         return request
                 .given()
@@ -30,7 +29,7 @@ public class SalesSeedService {
                 .response();
     }
 
-    public Response createSaleAsUser(int plantId, int quantity, String token) {
+    public Response createSaleAsNonAdmin(int plantId, int quantity) {
         request = authService.getAuthenticatedRequest("testuser", "test123");
         return request
                 .given()
@@ -160,19 +159,6 @@ public class SalesSeedService {
         return response.jsonPath().get("[0].id");
     }
 
-    public int getAnyPlantId() {
-        request = authService.getAuthenticatedRequest("admin", "admin123");
-
-        Response response = request
-                .when()
-                .get("/api/plants")
-                .then()
-                .extract()
-                .response();
-
-        return response.jsonPath().get("[0].id");
-    }
-
     public int getPlantStock(int plantId) {
         request = authService.getAuthenticatedRequest("admin", "admin123");
 
@@ -197,6 +183,31 @@ public class SalesSeedService {
                 .then()
                 .extract()
                 .response();
+    }
+
+    public int getAnyPlantIdWithStock() {
+
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+
+        Response response = request
+                .when()
+                .get("/api/plants")
+                .then()
+                .extract()
+                .response();
+
+        List<Map<String, Object>> plants = response.jsonPath().getList("$");
+
+        for (Map<String, Object> plant : plants) {
+
+            int qty = (Integer) plant.get("quantity");
+
+            if (qty > 0) {
+                return (Integer) plant.get("id");
+            }
+        }
+
+        throw new RuntimeException("No plant found with stock > 0");
     }
 
 }

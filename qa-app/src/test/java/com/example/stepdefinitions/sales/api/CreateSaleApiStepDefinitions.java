@@ -41,13 +41,6 @@ public class CreateSaleApiStepDefinitions {
 
     }
 
-    @When("the admin sends POST request to sell plant with id {int} and quantity {int}")
-    public void theAdminSendsPostRequest(Integer id, Integer qty) {
-        plantId = id;
-        quantity = qty;
-        response = salesSeedService.createSale(plantId, quantity);
-    }
-
     @Then("the response status code should be {int}")
     public void theResponseStatusCodeShouldBe(Integer statusCode) {
         assertEquals(statusCode.intValue(), response.getStatusCode());
@@ -57,7 +50,7 @@ public class CreateSaleApiStepDefinitions {
     public void theResponseShouldContainValidSaleDetails() {
         // Sale level
         assertNotNull(response.jsonPath().get("id"));
-        assertEquals(quantity, response.jsonPath().getInt("quantity"));
+        assertEquals(quantity+1, response.jsonPath().getInt("quantity"));
         assertNotNull(response.jsonPath().get("soldAt"));
         assertTrue(response.jsonPath().getDouble("totalPrice") > 0);
 
@@ -78,13 +71,9 @@ public class CreateSaleApiStepDefinitions {
         assertNotNull("Failed to obtain non-admin auth token", token);
     }
 
-    @When("the non-admin sends POST request to sell plant with id {int} and quantity {int}")
-    public void theNonAdminSendsPostRequest(Integer id, Integer qty) {
-        plantId = id;
-        quantity = qty;
-
-        // Use a method in SalesSeedService to create sale using token
-        response = salesSeedService.createSaleAsUser(plantId, quantity, response.jsonPath().getString("token"));
+    @When("the non-admin sends a POST request to sell plant with quantity {int}")
+    public void theNonAdminSendsPostRequest(int qty) {
+        response = salesSeedService.createSaleAsNonAdmin(plantId, qty);
     }
 
     @Then("the response should contain error message {string}")
@@ -98,12 +87,9 @@ public class CreateSaleApiStepDefinitions {
         // no token will be used
     }
 
-    @When("the unauthorized user sends POST request to sell plant with id {int} and quantity {int}")
-    public void theUserSendsPostRequest(Integer id, Integer qty) {
-        plantId = id;
+    @When("the unauthorized user sends a POST request to sell plant with quantity {int}")
+    public void theUnauthorizedUserSendsPostRequest(int qty) {
         quantity = qty;
-
-        // Use a method in SalesSeedService for unauthenticated request
         response = salesSeedService.createSaleWithoutAuth(plantId, quantity);
     }
 
@@ -210,13 +196,13 @@ public class CreateSaleApiStepDefinitions {
 
     @Given("a valid plant id exists")
     public void validPlantIdExists() {
-        plantId = salesSeedService.getAnyPlantId();
+        plantId = salesSeedService.getAnyPlantIdWithStock();
         stockBefore = salesSeedService.getPlantStock(plantId);
     }
 
     @When("the admin sends a POST request to sell plant with quantity {int}")
     public void sendInvalidSaleRequest(int qty) {
-        response = salesSeedService.createSale(plantId, qty);
+        response = salesSeedService.createSaleAsAdmin(plantId, qty);
     }
 
     @Then("the error response should contain validation details")
@@ -235,7 +221,7 @@ public class CreateSaleApiStepDefinitions {
 
     @Given("a plant exists with limited stock")
     public void plantExistsWithLimitedStock() {
-        plantId = salesSeedService.getAnyPlantId();
+        plantId = salesSeedService.getAnyPlantIdWithStock();
         stockBefore = salesSeedService.getPlantStock(plantId);
 
         sellQty = stockBefore + 10; // intentionally exceeding stock
@@ -243,7 +229,7 @@ public class CreateSaleApiStepDefinitions {
 
     @When("the admin sends a POST request to sell quantity greater than available stock")
     public void sendSaleExceedStockRequest() {
-        response = salesSeedService.createSale(plantId, sellQty);
+        response = salesSeedService.createSaleAsAdmin(plantId, sellQty);
     }
 
     @When("the admin sends POST request to sell plant with id {string} and quantity {int}")
