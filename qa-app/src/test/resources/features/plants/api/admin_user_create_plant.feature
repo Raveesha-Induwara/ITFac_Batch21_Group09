@@ -1,4 +1,4 @@
-@api @plants
+@214013L
 Feature: Plant Management API Validation
 
   Scenario Outline: Create plant and verify against Swagger documentation

@@ -24,12 +24,6 @@ public class CategorySearchStepDefinition {
     @Then("all results in the table should have the category {string}")
     public void verifyAllCategoriesMatch(String expectedCategory) {
         boolean isMatch = searchPage.areAllResultsMatching(expectedCategory);
-        try {
-            
-            Thread.sleep(1000); // Brief pause for observation during test runs
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         Assert.assertTrue("One or more search results did not match the category: " + expectedCategory, isMatch);
     }
 }

@@ -16,12 +16,11 @@ public class SearchPlant {
     private WebDriverWait wait;
 
     // Locators
-    private By searchBar = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[1]/input");
-    private By searchBtn = By.xpath("//button[text()='Search']");
+    private By searchBar = By.className("form-control");
+    private By searchBtn = By.cssSelector(".btn.btn-primary.me-2");
     // Using the table body path you provided
     private By tableBody = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody");
-// Locators based on your provided XPaths
-    private By categorySelect = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[2]/select");
+    private By categorySelect = By.className("form-select");
     // This finds the 2nd column (Category) for ALL rows in the table body
     private By categoryColumnCells = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr/td[2]");
 
@@ -55,15 +54,26 @@ public class SearchPlant {
         }
     }
     public boolean areAllResultsMatching(String expectedCategory) {
-        // Wait for results to load
-        wait.until(ExpectedConditions.presenceOfElementLocated(categoryColumnCells));
+        // Wait for the rows to be present
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(categoryColumnCells));
+
+        // Give the table a tiny moment to finish refreshing data 
+        wait.until(d -> d.findElements(categoryColumnCells).size() > 0);
+
         List<WebElement> cells = driver.findElements(categoryColumnCells);
-        
-        if (cells.isEmpty()) return false;
+
+        if (cells.isEmpty()) {
+            return false;
+        }
 
         for (WebElement cell : cells) {
-            if (!cell.getText().trim().equalsIgnoreCase(expectedCategory)) {
-                return false; // Found a row that doesn't match the filter
+            String actualText = cell.getText().trim();
+
+            if (!actualText.equals(expectedCategory)) {
+                System.err.println("Validation Failed!");
+                System.err.println("Expected: [" + expectedCategory + "]");
+                System.err.println("Actual (Trimmed): [" + actualText + "]");
+                return false;
             }
         }
         return true;
