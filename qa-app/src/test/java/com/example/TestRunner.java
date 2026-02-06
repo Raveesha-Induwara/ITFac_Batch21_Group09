@@ -7,7 +7,7 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "src/test/resources/features/category/api/get_category_by_id.feature",
+        features = "src/test/resources/features/category/ui/category_cancel_button.feature",
         glue = {"com.example.stepdefinitions"},
         plugin = {
             "pretty",
