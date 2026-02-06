@@ -54,15 +54,26 @@ public class SearchPlant {
         }
     }
     public boolean areAllResultsMatching(String expectedCategory) {
-        // Wait for results to load
-        wait.until(ExpectedConditions.presenceOfElementLocated(categoryColumnCells));
+        // Wait for the rows to be present
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(categoryColumnCells));
+
+        // Give the table a tiny moment to finish refreshing data 
+        wait.until(d -> d.findElements(categoryColumnCells).size() > 0);
+
         List<WebElement> cells = driver.findElements(categoryColumnCells);
-        
-        if (cells.isEmpty()) return false;
+
+        if (cells.isEmpty()) {
+            return false;
+        }
 
         for (WebElement cell : cells) {
-            if (!cell.getText().trim().equalsIgnoreCase(expectedCategory)) {
-                return false; // Found a row that doesn't match the filter
+            String actualText = cell.getText().trim();
+
+            if (!actualText.equals(expectedCategory)) {
+                System.err.println("Validation Failed!");
+                System.err.println("Expected: [" + expectedCategory + "]");
+                System.err.println("Actual (Trimmed): [" + actualText + "]");
+                return false;
             }
         }
         return true;
