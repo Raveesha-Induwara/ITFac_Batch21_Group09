@@ -18,7 +18,6 @@ public class PlantAddDuplicatePlantStepDefinition {
 
     @Then("the system should show the message {string}")
     public void verifyDuplicateSubmission(String expectedMessage) throws InterruptedException {
-        Thread.sleep(200);
         String actualMessage = plantPage.AlertMsg();
         Assert.assertEquals("The alert message did not match!", expectedMessage, actualMessage);
     }

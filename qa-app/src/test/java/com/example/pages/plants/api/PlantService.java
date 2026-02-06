@@ -1,9 +1,8 @@
 package com.example.pages.plants.api;
 
+import java.util.HashMap;
 import java.util.Map;
-
 import com.example.pages.login.api.AuthService;
-
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -12,19 +11,29 @@ public class PlantService {
 
     private AuthService authService = new AuthService();
 
-    public Response createPlantAdmin(int categoryId, Map<String, Object> plantData) {
-        // Obtains the request spec with the Bearer token already set
+    // Helper method to keep data construction out of Step Definitions
+    private Map<String, Object> createPlantBody(int id, String name, int price, int quantity) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("id", id);
+        body.put("name", name);
+        body.put("price", price);
+        body.put("quantity", quantity);
+        return body;
+    }
+
+    public Response createPlantAdmin(int categoryId, String name, int price, int quantity) {
         RequestSpecification request = authService.getAuthenticatedRequest("admin", "admin123");
+        Map<String, Object> plantData = createPlantBody(10, name, price, quantity);
 
-        // Based on your preference for Query Parameters
         return request
                 .queryParam("categoryId", categoryId)
                 .body(plantData)
                 .post("/api/plants/category/{categoryId}", categoryId);
     }
 
-    public Response createPlantNonAdmin(int categoryId, Map<String, Object> plantData) {
+    public Response createPlantNonAdmin(int categoryId, String name, int price, int quantity) {
         RequestSpecification request = authService.getAuthenticatedRequest("testuser", "test123");
+        Map<String, Object> plantData = createPlantBody(10, name, price, quantity);
 
         return request
                 .queryParam("categoryId", categoryId)
@@ -32,13 +41,16 @@ public class PlantService {
                 .post("/api/plants/category/{categoryId}", categoryId);
     }
 
-    public Response createPlantWithoutToken(int categoryId, Map<String, Object> plantData) {
+    public Response createPlantWithoutToken(int categoryId, String name, int price, int quantity) {
+        Map<String, Object> plantData = createPlantBody(15, name, price, quantity);
+
         return RestAssured.given()
                 .header("Content-Type", "application/json")
                 .pathParam("categoryId", categoryId)
                 .body(plantData)
                 .post("/api/plants/category/{categoryId}");
     }
+
     public Response getPlantsByCategory(int categoryId, String username, String password) {
         return authService.getAuthenticatedRequest(username, password)
                 .pathParam("catId", categoryId)
