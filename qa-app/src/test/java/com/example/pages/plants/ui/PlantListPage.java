@@ -89,10 +89,6 @@ public class PlantListPage {
         return !prevLi.getAttribute("class").contains("disabled");
     }
 
-    /* -------------------------------
-       NAVIGATION
-       ------------------------------- */
-
     public void goToNextPage() {
         click(nextButton);
         waitForPageReload();
@@ -103,9 +99,6 @@ public class PlantListPage {
         waitForPageReload();
     }
 
-    /* -------------------------------
-       HELPERS
-       ------------------------------- */
 
     private void click(By locator) {
         try {
