@@ -18,6 +18,7 @@ public class SearchPlant {
     // Locators
     private By searchBar = By.className("form-control");
     private By searchBtn = By.cssSelector(".btn.btn-primary.me-2");
+    private By resetBtn = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[3]/a[1]");
     // Using the table body path you provided
     private By tableBody = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody");
     private By categorySelect = By.className("form-select");
@@ -44,20 +45,51 @@ public class SearchPlant {
         driver.findElement(searchBtn).click();
     }
 
+    public void clickReset() {
+        WebElement resetButton = wait.until(ExpectedConditions.elementToBeClickable(resetBtn));
+        resetButton.click();
+    }
+
+    public String getSearchBarValue() {
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(searchBar));
+        return input.getAttribute("value");
+    }
+
+    public String getSelectedCategory() {
+        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(categorySelect));
+        Select select = new Select(dropdown);
+        return select.getFirstSelectedOption().getText();
+    }
+
+    public boolean isSearchBarEmpty() {
+        String value = getSearchBarValue();
+        return value == null || value.trim().isEmpty();
+    }
+
+    public boolean isCategoryFilterReset() {
+        String selectedCategory = getSelectedCategory();
+        return selectedCategory.equalsIgnoreCase("All Categories");
+    }
+
 
     public int getResultCount() {
         try {
+            Thread.sleep(500); // Wait for table to update
             WebElement body = driver.findElement(tableBody);
             return body.findElements(By.tagName("tr")).size();
         } catch (Exception e) {
             return 0;
         }
     }
+
+    public String getInitialCategoryValue() {
+        return getSelectedCategory();
+    }
     public boolean areAllResultsMatching(String expectedCategory) {
         // Wait for the rows to be present
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(categoryColumnCells));
 
-        // Give the table a tiny moment to finish refreshing data 
+        // Give the table a tiny moment to finish refreshing data
         wait.until(d -> d.findElements(categoryColumnCells).size() > 0);
 
         List<WebElement> cells = driver.findElements(categoryColumnCells);
