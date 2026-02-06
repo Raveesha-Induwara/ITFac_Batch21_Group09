@@ -22,20 +22,10 @@ public class PlantFilterResetStepDefinition {
     @When("the user clicks the reset button")
     public void clickResetButton() {
         // Store the category value before clicking reset
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         categoryBeforeReset = searchPage.getSelectedCategory();
         System.out.println("DEBUG: Category before reset = '" + categoryBeforeReset + "'");
         
         searchPage.clickReset();
-        try {
-            Thread.sleep(1500); // Wait for reset action to complete
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Then("the search bar should be cleared")
@@ -60,11 +50,6 @@ public class PlantFilterResetStepDefinition {
 
     @Then("all plants should be displayed")
     public void verifyAllPlantsDisplayed() {
-        try {
-            Thread.sleep(1500); // Wait longer for list to refresh after reset
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         int currentCount = searchPage.getResultCount();
         System.out.println("DEBUG: Plant count after reset = " + currentCount);
 

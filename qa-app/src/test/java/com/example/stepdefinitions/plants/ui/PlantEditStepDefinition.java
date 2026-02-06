@@ -92,12 +92,6 @@ public class PlantEditStepDefinition {
     @And("the admin clicks the save button")
     public void adminClicksSaveButton() {
         editPlantPage.clickSave();
-        // Wait for form submission to process
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @And("the admin clicks the cancel button")
@@ -109,13 +103,6 @@ public class PlantEditStepDefinition {
 
     @Then("the plant should be updated successfully")
     public void plantShouldBeUpdatedSuccessfully() {
-        // Wait longer for the form submission and redirect
-        try {
-            Thread.sleep(500); // Increased from 500ms to 2000ms
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String currentUrl = editPlantPage.getCurrentUrl();
 
         // Check that we're no longer on the edit page (we should be redirected to list page)
@@ -125,12 +112,6 @@ public class PlantEditStepDefinition {
 
     @Then("the user should be navigated back to the plant list page")
     public void userShouldBeNavigatedBackToPlantListPage() {
-        // Wait for redirect to complete
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String currentUrl = editPlantPage.getCurrentUrl();
         Assert.assertTrue("User was not redirected to plant list page. Current URL: " + currentUrl,
             currentUrl.contains("/ui/plants") && !currentUrl.contains("/edit/"));
@@ -138,11 +119,6 @@ public class PlantEditStepDefinition {
 
     @And("the updated plant {string} should appear in the plant list")
     public void updatedPlantShouldAppearInList(String plantName) {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         boolean isFound = editPlantPage.isPlantNameVisibleInTable(plantName);
         Assert.assertTrue("The updated plant '" + plantName + "' was not found in the plant list!", isFound);
     }
@@ -154,11 +130,6 @@ public class PlantEditStepDefinition {
 
     @Then("the error message should display {string}")
     public void errorMessageShouldDisplay(String expectedError) {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String actualError = editPlantPage.getAllErrorMessages();
         Assert.assertTrue("Expected error message '" + expectedError + "' but got '" + actualError + "'",
             actualError.contains(expectedError));
@@ -186,55 +157,30 @@ public class PlantEditStepDefinition {
 
     @Then("the plant name error should display {string}")
     public void plantNameErrorShouldDisplay(String expectedError) {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String actualError = editPlantPage.getPlantNameErrorMessage();
         Assert.assertEquals("Plant name error message mismatch", expectedError, actualError);
     }
 
     @Then("the price error should display {string}")
     public void priceErrorShouldDisplay(String expectedError) {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String actualError = editPlantPage.getPriceErrorMessage();
         Assert.assertEquals("Price error message mismatch", expectedError, actualError);
     }
 
     @Then("the quantity error should display {string}")
     public void quantityErrorShouldDisplay(String expectedError) {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String actualError = editPlantPage.getQuantityErrorMessage();
         Assert.assertEquals("Quantity error message mismatch", expectedError, actualError);
     }
 
     @Then("the category error should display {string}")
     public void categoryErrorShouldDisplay(String expectedError) {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String actualError = editPlantPage.getCategoryErrorMessage();
         Assert.assertEquals("Category error message mismatch", expectedError, actualError);
     }
 
     @And("the success message should be {string}")
     public void theSuccessMessageShouldBe(String expectedMessage) {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String actualMessage = editPlantPage.getSuccessMessage();
         Assert.assertEquals("Success message mismatch", expectedMessage, actualMessage);
     }
@@ -243,11 +189,6 @@ public class PlantEditStepDefinition {
 
     @And("the updated plant {string} should be visible in the list with price {string}, quantity {string}, and category {string}")
     public void theUpdatedPlantShouldBeVisibleInListWithPriceQuantityAndCategory(String plantName, String expectedPrice, String expectedQuantity, String expectedCategory) {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // Verify plant exists in the list
         boolean isPlantVisible = editPlantPage.isPlantNameVisibleInTable(plantName);
@@ -289,12 +230,6 @@ public class PlantEditStepDefinition {
 
     @And("the plant {string} in the list should have price {string}")
     public void thePlantInListShouldHavePrice(String plantName, String expectedPrice) {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String actualPrice = editPlantPage.getPlantPriceFromList(plantName);
         Assert.assertNotNull("Could not retrieve price for plant: " + plantName, actualPrice);
 
@@ -310,12 +245,6 @@ public class PlantEditStepDefinition {
 
     @And("the plant {string} in the list should have quantity {string}")
     public void thePlantInListShouldHaveQuantity(String plantName, String expectedQuantity) {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
         String actualQuantity = editPlantPage.getPlantQuantityFromList(plantName);
         Assert.assertNotNull("Could not retrieve quantity for plant: " + plantName, actualQuantity);
 
@@ -332,11 +261,6 @@ public class PlantEditStepDefinition {
 
     @And("the first plant in the list should have category {string}")
     public void theFirstPlantInListShouldHaveCategory(String expectedCategory) {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // Get the first plant name
         List<String> plantNames = plantListPage.getPlantNames();

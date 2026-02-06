@@ -15,7 +15,6 @@ public class PlantListPage {
 
     private final By plantTable = By.tagName("table");
     private final By plantRows = By.cssSelector("tbody tr");
-    private final By noDataMessage = By.xpath("//td[contains(text(),'No plants found')]");
     private final By pagination = By.cssSelector("ul.pagination");
     private final By activePage = By.cssSelector("li.page-item.active");
     private final By nextButton = By.xpath("//a[normalize-space()='Next']");
@@ -52,24 +51,6 @@ public class PlantListPage {
         return !pages.isEmpty() && pages.get(0).isDisplayed();
     }
 
-    public boolean isNoDataMessageDisplayed() {
-        try {
-            List<WebElement> noDataElements = driver.findElements(noDataMessage);
-            return !noDataElements.isEmpty() && noDataElements.get(0).isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public String getNoDataMessageText() {
-        try {
-            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(noDataMessage));
-            return element.getText().trim();
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     public Integer getActivePageNumberSafe() {
         List<WebElement> active = driver.findElements(activePage);
 
@@ -90,52 +71,91 @@ public class PlantListPage {
     }
 
     public void goToNextPage() {
+        captureCurrentTableState();
         click(nextButton);
-        waitForPageReload();
+        waitForTableContentChange();
     }
 
     public void goToPreviousPage() {
+        captureCurrentTableState();
         click(previousButton);
-        waitForPageReload();
+        waitForTableContentChange();
     }
 
+    /* -------------------------------
+       HELPERS
+       ------------------------------- */
 
-    private void click(By locator) {
+    private String currentTableState = "";
+
+    private void captureCurrentTableState() {
         try {
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
-            // Scroll element into view
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
-            Thread.sleep(300); // Small wait after scroll
-            element.click();
+            List<WebElement> rows = driver.findElements(plantRows);
+            if (!rows.isEmpty()) {
+                currentTableState = rows.get(0).getText();
+            }
         } catch (Exception e) {
-            // Fallback to JavaScript click
-            WebElement element = driver.findElement(locator);
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+            currentTableState = "";
         }
     }
 
-    private void waitForPageReload() {
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(plantRows));
+    private void waitForTableContentChange() {
+        final String initialState = currentTableState;
+        wait.until(driver -> {
+            try {
+                List<WebElement> rows = driver.findElements(plantRows);
+                if (rows.isEmpty()) return false;
+                String newState = rows.get(0).getText();
+                return !newState.equals(initialState);
+            } catch (Exception e) {
+                return false;
+            }
+        });
+    }
+
+    private void click(By locator) {
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        scrollToElement(element);
+
+        try {
+            element.click();
+        } catch (Exception e) {
+            // Fallback to JavaScript click if regular click fails
+            jsClick(element);
+        }
+    }
+
+    private void scrollToElement(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript(
+            "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+            element
+        );
+        // Wait for scroll animation to complete
+        wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
+    private void jsClick(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 
     public void clickSortColumn(String columnName) {
-        By columnLocator;
+        By columnLocator = getSortColumnLocator(columnName);
+        captureCurrentTableState();
+        click(columnLocator);
+        waitForTableContentChange();
+    }
+
+    private By getSortColumnLocator(String columnName) {
         switch (columnName.toLowerCase()) {
             case "name":
-                columnLocator = nameSortHeader;
-                break;
+                return nameSortHeader;
             case "price":
-                columnLocator = priceSortHeader;
-                break;
+                return priceSortHeader;
             case "quantity":
-                columnLocator = quantitySortHeader;
-                break;
+                return quantitySortHeader;
             default:
                 throw new IllegalArgumentException("Invalid column name: " + columnName);
         }
-        click(columnLocator);
-        waitForPageReload();
     }
 
     public List<String> getPlantNames() {
@@ -171,70 +191,37 @@ public class PlantListPage {
 
     public boolean isListSortedByName() {
         List<String> names = getPlantNames();
-        if (names.size() <= 1) return true;
-
-        // Check if sorted in ascending or descending order
-        boolean isAscending = true;
-        boolean isDescending = true;
-
-        for (int i = 0; i < names.size() - 1; i++) {
-            int comparison = names.get(i).compareToIgnoreCase(names.get(i + 1));
-            if (comparison > 0) isAscending = false;
-            if (comparison < 0) isDescending = false;
-        }
-
-        System.out.println("Name sorting - Ascending: " + isAscending + ", Descending: " + isDescending);
-        return isAscending || isDescending;
+        return isSorted(names, "Name");
     }
 
     public boolean isListSortedByPrice() {
         List<Double> prices = getPlantPrices();
-        if (prices.size() <= 1) return true;
-
-        boolean isAscending = true;
-        boolean isDescending = true;
-
-        for (int i = 0; i < prices.size() - 1; i++) {
-            if (prices.get(i) > prices.get(i + 1)) isAscending = false;
-            if (prices.get(i) < prices.get(i + 1)) isDescending = false;
-        }
-
-        System.out.println("Price sorting - Ascending: " + isAscending + ", Descending: " + isDescending);
-        return isAscending || isDescending;
+        return isSorted(prices, "Price");
     }
 
     public boolean isListSortedByQuantity() {
         List<Integer> quantities = getPlantQuantities();
-        if (quantities.size() <= 1) return true;
+        return isSorted(quantities, "Quantity");
+    }
+
+    private <T extends Comparable<T>> boolean isSorted(List<T> items, String sortType) {
+        if (items.size() <= 1) return true;
 
         boolean isAscending = true;
         boolean isDescending = true;
 
-        for (int i = 0; i < quantities.size() - 1; i++) {
-            if (quantities.get(i) > quantities.get(i + 1)) isAscending = false;
-            if (quantities.get(i) < quantities.get(i + 1)) isDescending = false;
+        for (int i = 0; i < items.size() - 1; i++) {
+            int comparison = items.get(i).compareTo(items.get(i + 1));
+            if (comparison > 0) isAscending = false;
+            if (comparison < 0) isDescending = false;
         }
 
-        System.out.println("Quantity sorting - Ascending: " + isAscending + ", Descending: " + isDescending);
+        System.out.println(sortType + " sorting - Ascending: " + isAscending + ", Descending: " + isDescending);
         return isAscending || isDescending;
     }
 
     public boolean hasArrowIcon(String columnName) {
-        By arrowLocator;
-        switch (columnName.toLowerCase()) {
-            case "name":
-                arrowLocator = nameArrowIcon;
-                break;
-            case "price":
-                arrowLocator = priceArrowIcon;
-                break;
-            case "quantity":
-            case "stock":
-                arrowLocator = stockArrowIcon;
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid sortable column name: " + columnName);
-        }
+        By arrowLocator = getArrowIconLocator(columnName);
 
         try {
             List<WebElement> arrowElements = driver.findElements(arrowLocator);
@@ -249,5 +236,19 @@ public class PlantListPage {
             System.out.println(columnName + " column arrow icon - Not found: " + e.getMessage());
         }
         return false;
+    }
+
+    private By getArrowIconLocator(String columnName) {
+        switch (columnName.toLowerCase()) {
+            case "name":
+                return nameArrowIcon;
+            case "price":
+                return priceArrowIcon;
+            case "quantity":
+            case "stock":
+                return stockArrowIcon;
+            default:
+                throw new IllegalArgumentException("Invalid sortable column name: " + columnName);
+        }
     }
 }
