@@ -1,14 +1,17 @@
 package com.example.stepdefinitions.plants.api;
 
-import io.cucumber.java.en.*;
-import io.restassured.response.Response;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 import com.example.pages.plants.api.PlantService;
+
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.restassured.response.Response;
 
 public class PlantApiStepDefinition {
 
@@ -38,18 +41,31 @@ public class PlantApiStepDefinition {
 
         response = plantService.createPlantNonAdmin(catId, body);
     }
+    @When("a request is sent to create a plant in category {int} without any token")
+    public void create_without_token(int catId) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("id", 15);
+        body.put("name", "Unauthorized Test");
+        body.put("price", 150);
+        body.put("quantity", 25);
+
+        response = plantService.createPlantWithoutToken(catId, body);
+    }
 
     @Then("the plant API should return status {int}")
     public void verify_status(int statusCode) {
         response.then().statusCode(statusCode);
+        response.prettyPrint();
     }
 
     @Then("the response message should be {string}")
     public void verify_message(String expectedValue) {
         if (response.statusCode() == 201) {
             response.then().body("name", equalTo(expectedValue));
+            response.prettyPrint();
         } else {
             response.then().body("message", containsString(expectedValue));
+            response.prettyPrint();
         }
     }
 

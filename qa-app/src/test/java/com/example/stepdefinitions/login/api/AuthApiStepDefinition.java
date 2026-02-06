@@ -20,10 +20,12 @@ public class AuthApiStepDefinition {
     @Then("the API response status should be {int}")
     public void verify_status(int statusCode) {
         response.then().statusCode(statusCode);
+        response.prettyPrint();
     }
 
     @Then("the response includes a valid token")
     public void verify_token() {
         response.then().body("token", notNullValue());
+        response.prettyPrint();
     }
 }
