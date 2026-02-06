@@ -57,4 +57,10 @@ public class NameSearchCategoryStepDefinition {
         categoryPage.navigateToCategoryPage();
         Assert.assertTrue("Admin is not on the page", categoryPage.isOnCategoryPage());
     }
+
+    @Then("dno results should be displayed in the table")
+    public void verifyNoResults() {
+        int count = searchPage.getResultCount();
+        Assert.assertEquals("Expected no results, but found " + count + " result(s)", 0, count);
+    }
 }

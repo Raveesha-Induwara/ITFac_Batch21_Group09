@@ -37,6 +37,20 @@ public class SearchCategory {
     public void selectParent(String parentName) {
         WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(parentSelect));
         Select select = new Select(dropdown);
+        
+        // Check if the option exists before trying to select it
+        boolean optionExists = select.getOptions().stream()
+            .anyMatch(option -> option.getText().equals(parentName));
+        
+        if (!optionExists) {
+            // This is a known UI bug - the option doesn't exist in the dropdown
+            throw new AssertionError("UI Bug: The option '" + parentName + "' does not exist in the parent dropdown filter. " +
+                "Available options: " + select.getOptions().stream()
+                    .map(WebElement::getText)
+                    .reduce((a, b) -> a + ", " + b)
+                    .orElse("none"));
+        }
+        
         select.selectByVisibleText(parentName);
     }
 
@@ -47,7 +61,17 @@ public class SearchCategory {
     public int getResultCount() {
         try {
             WebElement body = driver.findElement(tableBody);
-            return body.findElements(By.tagName("tr")).size();
+            List<WebElement> rows = body.findElements(By.tagName("tr"));
+            
+            // Check if the "No category found" message is displayed
+            if (rows.size() == 1) {
+                String rowText = rows.get(0).getText().trim();
+                if (rowText.equalsIgnoreCase("No category found")) {
+                    return 0;
+                }
+            }
+            
+            return rows.size();
         } catch (Exception e) {
             return 0;
         }
