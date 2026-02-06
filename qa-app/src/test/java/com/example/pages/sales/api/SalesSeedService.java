@@ -1,6 +1,7 @@
 package com.example.pages.sales.api;
 
 import java.util.List;
+import java.util.Map;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -184,6 +185,18 @@ public class SalesSeedService {
                 .response();
 
         return response.jsonPath().getInt("quantity");
+    }
+
+    public Response createSaleWithStringId(String plantId, int quantity) {
+        request = authService.getAuthenticatedRequest("admin", "admin123");
+        return request
+                .given()
+                .queryParam("quantity", quantity)
+                .pathParam("plantId", plantId)
+                .post("/api/sales/plant/{plantId}")
+                .then()
+                .extract()
+                .response();
     }
 
 }

@@ -246,4 +246,11 @@ public class CreateSaleApiStepDefinitions {
         response = salesSeedService.createSale(plantId, sellQty);
     }
 
+    @When("the admin sends POST request to sell plant with id {string} and quantity {int}")
+    public void theAdminSendsPostRequestWithStringId(String id, Integer qty) {
+
+        quantity = qty;
+        response = salesSeedService.createSaleWithStringId(id, quantity);
+    }
+
 }

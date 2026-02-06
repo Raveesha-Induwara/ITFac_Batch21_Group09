@@ -47,3 +47,10 @@ Feature: Create sale API
     Then the response status code should be 400
     And the error response should contain validation details
     And no sale should be created for the plant
+
+   @api-sale-create-invalid-id
+   Scenario: Verify error when plant id is sent as a string
+    Given an admin authorization token is available
+    When the admin sends POST request to sell plant with id "abc" and quantity 2
+    Then the response status code should be 400
+    And the error response should contain validation details
