@@ -46,12 +46,6 @@ public class PlantAddPageFieldValidationStepDefinition {
     @And("the admin clicks the submit button")
     public void submitForm() {
         plantPage.clickSubmit();
-        // Time interval to allow UI to process
-        try {
-            Thread.sleep(800);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Then("the error message should contain {string}")
@@ -72,10 +66,5 @@ public class PlantAddPageFieldValidationStepDefinition {
     @And("the plant form should not be submitted")
     public void verifyFormStatus() {
         Assert.assertTrue("Form closed unexpectedly!", plantPage.isFormStillDisplayed());
-        try {
-            Thread.sleep(800);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
