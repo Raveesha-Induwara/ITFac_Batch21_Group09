@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.everyItem;
 
 import com.example.pages.plants.api.PlantService;
-
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
@@ -37,7 +36,6 @@ public class GetPlantApiStepDefinition {
 
     @Then("all returned plants must belong to category ID {int}")
     public void verifyCategoryIdMatch(int expectedId) {
-        // looks into the 'category' object of every item in the array
         response.then().body("category.id", everyItem(equalTo(expectedId)));
         response.prettyPrint();
     }
