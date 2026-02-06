@@ -19,12 +19,12 @@ public class AddPlantPage {
 
     // Existing locators preserved
     private By addPlantBtn = By.xpath("//a[contains(@href, 'add')]");
-    private By subCategoryDropdown = By.name("categoryId");
-    private By plantNameField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[1]/input");
-    private By priceField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[3]/input");
-    private By quantityField = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[4]/input");
-    private By submitBtn = By.xpath("/html/body/div/div/div[2]/div[2]/form/button");
-    private By cancelBtn = By.linkText("Cancel");
+    private By subCategoryDropdown = By.id("categoryId");
+    private By plantNameField = By.id("name");
+    private By priceField = By.id("price");
+    private By quantityField = By.id("quantity");
+    private By submitBtn = By.cssSelector(".btn.btn-primary");
+    private By cancelBtn = By.cssSelector(".btn.btn-secondary");
     private By SubmissionAlertMsg = By.xpath("/html/body/div[1]/div/div[2]/div[2]/div");
 
     // Flexible locator to find any error message on the page
