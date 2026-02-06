@@ -1,5 +1,5 @@
 @214009F @plant_edit
-Feature: Plant Edit Functionality
+Feature: UI: Plant Edit Functionality
 
   Background:
     Given the user is logged in as an admin

@@ -133,8 +133,6 @@ public class EditPlantPage {
 
     public void clickSave() {
         WebElement saveBtn = wait.until(ExpectedConditions.elementToBeClickable(saveButton));
-
-        // Store current URL to detect navigation
         String currentUrl = driver.getCurrentUrl();
 
         try {
@@ -144,12 +142,11 @@ public class EditPlantPage {
             ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", saveBtn);
         }
 
-        // Wait a moment for form submission
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Wait for either navigation or error message to appear
+        wait.until(driver ->
+            !driver.getCurrentUrl().equals(currentUrl) ||
+            !driver.findElements(anyErrorMsg).isEmpty()
+        );
     }
 
     public void clickCancel() {
