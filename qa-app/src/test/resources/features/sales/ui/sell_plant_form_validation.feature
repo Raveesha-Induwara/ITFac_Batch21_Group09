@@ -3,7 +3,7 @@ Feature: Sell Plant Form Validation
   Background:
     Given the user is logged in as an admin
 
-#   @sell-plant-validation
+  @sell-plant-validation
   Scenario: Show error when Plant is not selected
     When the user clicks on "Sales" in the side navigation
     Then the "Sales" section should be highlighted in the side navigation

@@ -1,4 +1,4 @@
-package com.example.stepdefinitions.sales;
+package com.example.stepdefinitions.sales.ui;
 
 import io.cucumber.java.en.*;
 import static org.junit.Assert.assertTrue;
@@ -6,8 +6,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.openqa.selenium.WebDriver;
 
-import com.example.pages.sales.SellPlantPage;
-import com.example.pages.sales.SalesPage;
+import com.example.pages.sales.ui.SalesPage;
+import com.example.pages.sales.ui.SellPlantPage;
 import com.example.stepdefinitions.Hooks;
 
 public class SellPlantFormValidationStepDefinitions {
