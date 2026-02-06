@@ -1,4 +1,4 @@
-@plant_edit
+@214009F @plant_edit
 Feature: Plant Edit Functionality
 
   Background:
@@ -6,7 +6,7 @@ Feature: Plant Edit Functionality
     And the user is on the "plants" page
     And at least one plant exists in the system
 
-  @valid_edit @positive
+  @214009F @positive
   Scenario Outline: Admin successfully edits plant with valid data
     When the admin clicks the edit button for the first plant
     And the admin is on the edit plant page
@@ -25,7 +25,7 @@ Feature: Plant Edit Functionality
       | A Test Plant | Rose     | 150.50 | 25       | Update all fields with Rose         |
       | A Test Plant | Lily     | 75.00  | 0        | Update same plant with Lily and 0   |
 
-  @field_validation @negative
+  @214009F @negative
   Scenario Outline: Verify field validation rules
     When the admin clicks the edit button for the first plant
     And the admin is on the edit plant page

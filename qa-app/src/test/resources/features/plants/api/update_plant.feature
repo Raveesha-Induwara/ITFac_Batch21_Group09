@@ -1,5 +1,7 @@
+@214009F @plant_update_validation
 Feature: Plant Update API Validation
 
+    @214009F
   Scenario Outline: Verify plant update with different validation cases
     When I update plant <plantId> with name "<name>" price <price> quantity <quantity> subCategory <subCategoryId> using "<user>" credentials
     Then the update response status should be <statusCode>

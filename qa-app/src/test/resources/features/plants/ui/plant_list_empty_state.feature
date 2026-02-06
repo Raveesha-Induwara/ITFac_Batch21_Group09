@@ -1,10 +1,11 @@
+@214009F @plant_list_empty_state
 Feature: Plant List Empty State
 
   Background:
     Given the user is logged in as an admin
     And the user is on the "plants" page
 
-  @empty-state @smoke
+  @214009F @positive
   Scenario: Verify plant list without any published plants
     Given there are no published plants in the system
     When the user views the plant list
