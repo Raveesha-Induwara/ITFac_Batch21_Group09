@@ -15,14 +15,14 @@ public class SearchPlant {
     private WebDriver driver;
     private WebDriverWait wait;
 
-
-    private By searchBar = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[1]/input");
-    private By searchBtn = By.xpath("//button[text()='Search']");
+    // Locators
+    private By searchBar = By.className("form-control");
+    private By searchBtn = By.cssSelector(".btn.btn-primary.me-2");
     private By resetBtn = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[3]/a[1]");
-
+    // Using the table body path you provided
     private By tableBody = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody");
-
-    private By categorySelect = By.xpath("/html/body/div[1]/div/div[2]/div[2]/form/div[2]/select");
+    private By categorySelect = By.className("form-select");
+    // This finds the 2nd column (Category) for ALL rows in the table body
     private By categoryColumnCells = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr/td[2]");
 
     public SearchPlant(WebDriver driver) {
@@ -81,20 +81,31 @@ public class SearchPlant {
             return 0;
         }
     }
-    
+
     public String getInitialCategoryValue() {
         return getSelectedCategory();
     }
     public boolean areAllResultsMatching(String expectedCategory) {
-        // Wait for results to load
-        wait.until(ExpectedConditions.presenceOfElementLocated(categoryColumnCells));
+        // Wait for the rows to be present
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(categoryColumnCells));
+
+        // Give the table a tiny moment to finish refreshing data
+        wait.until(d -> d.findElements(categoryColumnCells).size() > 0);
+
         List<WebElement> cells = driver.findElements(categoryColumnCells);
-        
-        if (cells.isEmpty()) return false;
+
+        if (cells.isEmpty()) {
+            return false;
+        }
 
         for (WebElement cell : cells) {
-            if (!cell.getText().trim().equalsIgnoreCase(expectedCategory)) {
-                return false; // Found a row that doesn't match the filter
+            String actualText = cell.getText().trim();
+
+            if (!actualText.equals(expectedCategory)) {
+                System.err.println("Validation Failed!");
+                System.err.println("Expected: [" + expectedCategory + "]");
+                System.err.println("Actual (Trimmed): [" + actualText + "]");
+                return false;
             }
         }
         return true;
