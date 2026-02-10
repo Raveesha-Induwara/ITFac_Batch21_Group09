@@ -25,12 +25,12 @@ public class NavigationMenuHighlightStepDefinition {
     @When("the user is on the dashboard page")
     public void theUserIsOnTheDashboardPage() {
         assertTrue(
-                "Admin is not on the dashboard page",
+                "User is not on the dashboard page",
                 loginPage.isOnDashboardPage()
         );
     }
 
-    @When("the admin clicks on {string} in the side navigation menu")
+    @When("the user clicks on {string} in the side navigation menu")
     public void theUserClicksOnInTheSideNavigation(String menuName) {
         dashboardPage.clickMenuInSideNavigation(menuName);
     }

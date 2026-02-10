@@ -7,7 +7,7 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "src/test/resources/features/sales",
+        features = "src/test/resources/features/dashboard",
         glue = {"com.example.stepdefinitions"},
         plugin = {
             "pretty",
