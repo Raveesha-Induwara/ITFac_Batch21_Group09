@@ -1,7 +1,10 @@
 package com.example.pages.category.api;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Map;
 
@@ -60,6 +63,20 @@ public class CategoryService {
         return request
                 .body(categoryData)
                 .post("/api/categories");
+    }
+
+    public Response createCategoryWithoutAuth(Map<String, Object> categoryData) {
+        return RestAssured.given()
+                .body(categoryData)
+                .post("/api/categories");
+    }
+
+    public void isCategoryCreated(Response response) {
+        if (response.getStatusCode() == 201 || response.getStatusCode() == 200) {
+            System.out.println("Category created successfully with ID: " + response.jsonPath().get("id"));
+        } else {
+            System.out.println("Failed to create category. Status code: " + response.getStatusCode());
+        }
     }
 
     public Response createCategoryNonAdmin(Map<String, Object> categoryData) {
