@@ -14,6 +14,22 @@ public class CategoryService {
 
     private AuthService authService = new AuthService();
 
+    public Map<String, Object> getMainCategoryPayload(String categoryName) {
+        Map<String, Object> payload = new java.util.HashMap<>();
+        payload.put("name", categoryName);
+        payload.put("parent", null);
+        return payload;
+    }
+
+    public Map<String, Object> getSubCategoryPayload(String subcategoryName, int parentCategoryId) {
+        Map<String, Object> payload = new java.util.HashMap<>();
+        payload.put("name", subcategoryName);
+        Map<String, Object> parent = new java.util.HashMap<>();
+        parent.put("id", parentCategoryId);
+        payload.put("parent", parent);
+        return payload;
+    }
+
     public Response getMainCategoriesAdmin() {
         // Obtains the request spec with the Bearer token already set
         RequestSpecification request = authService.getAuthenticatedRequest("admin", "admin123");

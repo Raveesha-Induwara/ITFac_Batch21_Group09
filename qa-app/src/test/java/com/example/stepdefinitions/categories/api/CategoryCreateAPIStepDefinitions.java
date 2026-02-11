@@ -2,11 +2,9 @@ package com.example.stepdefinitions.categories.api;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.example.pages.category.api.CategoryService;
-import com.example.utils.DriverFactory;
 
 import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
@@ -24,18 +22,26 @@ public class CategoryCreateAPIStepDefinitions {
 
     @When("the admin sends a POST request to add main category with {string} as the main category name")
     public void theAdminAddMainCategoryWithValidDetails(String categoryName) {
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("name", categoryName);
-        payload.put("parent", null);
+        Map<String, Object> payload = categoryService.getMainCategoryPayload(categoryName);
         response = categoryService.createCategoryAdmin(payload);
     }
 
     @When("the user sends a POST request to add main category with {string} as the main category name without authentication")
     public void theUserAddsMainCategoryWithoutAuth(String categoryName) {
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("name", categoryName);
-        payload.put("parent", null);
+        Map<String, Object> payload = categoryService.getMainCategoryPayload(categoryName);
         response = categoryService.createCategoryWithoutAuth(payload);
+    }
+
+    @When("the user sends a POST request to add subcategory without authentication {string} {int}")
+    public void theUserAddsSubcategoryWithoutAuth(String categoryName, int parentCategoryId) {
+        Map<String, Object> payload = categoryService.getSubCategoryPayload(categoryName, parentCategoryId);
+        response = categoryService.createCategoryWithoutAuth(payload);
+    }
+
+    @When("the admin sends a POST request to add subcategory with {string} as the subcategory name and {int} as the parent category id")
+    public void theAdminAddsSubcategoryWithParent(String subcategoryName, int parentCategoryId) {
+        Map<String, Object> payload = categoryService.getSubCategoryPayload(subcategoryName, parentCategoryId);
+        response = categoryService.createCategoryAdmin(payload);
     }
 
     @Then("the response status code should be {int} for category creation")
@@ -48,23 +54,44 @@ public class CategoryCreateAPIStepDefinitions {
         categoryService.isCategoryCreated(response);
     }
 
-    @Then("the response should contain an error message indicating unauthorized access")
-    public void theResponseShouldContainErrorMessageIndicatingUnauthorizedAccess() {
-        String error = response.jsonPath().getString("error");
-        assertEquals("UNAUTHORIZED", error);
-    }
-
     @When("a main category named {string} already exists in the system")
     public void isMainCategoryAlreadyExists(String categoryName) {
         categoryService.isMainCategoryExist(categoryName);
     }
 
+    @Then("the response should contain an error message indicating unauthorized access")
+    public void theResponseShouldContainErrorMessageIndicatingUnauthorizedAccess() {
+        String error = response.jsonPath().getString("error");
+
+        try {
+            assertEquals("UNAUTHORIZED", error);
+        } catch (AssertionError e) {
+            System.out.println("Expected error message 'UNAUTHORIZED' but got: " + error);
+            throw e;
+        }
+    }
+
     @Then("the response should contain an error message indicating duplicate category")
     public void theResponseShouldContainErrorMessageIndicatingDuplicateCategory() {
         String error = response.jsonPath().getString("error");
-        assertEquals("DUPLICATE_RESOURCE", error);
+        try {
+            assertEquals("DUPLICATE_RESOURCE", error);
+        } catch (AssertionError e) {
+            System.out.println("Expected error message 'DUPLICATE_RESOURCE' but got: " + error);
+            throw e;
+        }
     }
 
+    @Then("the response should contain an error message indicating parent category not found")
+    public void theResponseShouldContainErrorMessageIndicatingParentCategoryNotFound() {
+        String error = response.jsonPath().getString("error");
+        try {
+            assertEquals("RESOURCE_NOT_FOUND", error);
+        } catch (AssertionError e) {
+            System.out.println("Expected error message 'RESOURCE_NOT_FOUND' but got: " + error);
+            throw e;
+        }
+    }
 
     @After
     public void deleteCategory() {
