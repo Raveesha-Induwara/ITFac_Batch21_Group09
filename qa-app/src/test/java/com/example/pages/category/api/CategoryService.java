@@ -119,4 +119,17 @@ public class CategoryService {
 
         return request.delete("/api/categories/{id}", categoryId);
     }
+
+    public void isMainCategoryExist(String categoryName) {
+        RequestSpecification request = authService.getAuthenticatedRequest("admin", "admin123");
+        Response response = request.get("/api/categories/main");
+
+        boolean categoryExists = response.jsonPath().getList("name").contains(categoryName);
+        if (categoryExists) {
+            System.out.println("Main category '" + categoryName + "' already exists.");
+        } else {
+            System.out.println("Main category '" + categoryName + "' does not exist.");
+            assertNotNull("Main category '" + categoryName + "' should exist but was not found.", null);
+        }
+    }
 }

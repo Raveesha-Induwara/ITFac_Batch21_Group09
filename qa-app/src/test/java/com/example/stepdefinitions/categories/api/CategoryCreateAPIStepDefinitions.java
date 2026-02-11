@@ -54,6 +54,18 @@ public class CategoryCreateAPIStepDefinitions {
         assertEquals("UNAUTHORIZED", error);
     }
 
+    @When("a main category named {string} already exists in the system")
+    public void isMainCategoryAlreadyExists(String categoryName) {
+        categoryService.isMainCategoryExist(categoryName);
+    }
+
+    @Then("the response should contain an error message indicating duplicate category")
+    public void theResponseShouldContainErrorMessageIndicatingDuplicateCategory() {
+        String error = response.jsonPath().getString("error");
+        assertEquals("DUPLICATE_RESOURCE", error);
+    }
+
+
     @After
     public void deleteCategory() {
         if (response != null && (response.getStatusCode() == 201 || response.getStatusCode() == 200)) {

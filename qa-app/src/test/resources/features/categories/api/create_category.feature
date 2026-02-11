@@ -18,4 +18,12 @@ Feature: Create category API
     Then the response status code should be 401 for category creation
     And the response should contain an error message indicating unauthorized access
 
+  
+  @api-category-create
+  Scenario: Verify API prevents duplicate main category creation.
+    Given an admin authorization token is available
+    When a main category named "Flower" already exists in the system
+    When the admin sends a POST request to add main category with "Flower" as the main category name
+    Then the response status code should be 400 for category creation
+    And the response should contain an error message indicating duplicate category
 
