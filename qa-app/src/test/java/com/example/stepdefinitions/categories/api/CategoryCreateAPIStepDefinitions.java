@@ -49,7 +49,7 @@ public class CategoryCreateAPIStepDefinitions {
         assertEquals(statusCode.intValue(), response.getStatusCode());
     }
     
-    @Then("the response should contain valid category details")
+    @Then("the response should contain valid newly created category details")
     public void theResponseShouldContainValidCategoryDetails() {
         categoryService.isCategoryCreated(response);
     }

@@ -5,7 +5,7 @@ Feature: Create category API
     Given an admin authorization token is available
     When the admin sends a POST request to add main category with "<categoryName>" as the main category name
     Then the response status code should be <statusCode> for category creation
-    And the response should contain valid category details
+    And the response should contain valid newly created category details
 
     Examples:
       | categoryName |  statusCode |
@@ -43,7 +43,7 @@ Feature: Create category API
     Given an admin authorization token is available
     When the admin sends a POST request to add subcategory with "<categoryName>" as the subcategory name and <ParentID> as the parent category id
     Then the response status code should be <statusCode> for category creation
-    And the response should contain valid category details
+    And the response should contain valid newly created category details
 
     Examples:
       | categoryName |  ParentID | statusCode |
@@ -60,7 +60,7 @@ Feature: Create category API
       | Rose         |  12       | 401        |
 
 
-  @api-category-create @new
+  @api-category-create
   Scenario: Verify API prevents category creation when category name does not meet minimum length or exceeds maximum length.
   Given an admin authorization token is available
   When the admin sends a POST request to add main category with "<categoryName>" as the main category name
