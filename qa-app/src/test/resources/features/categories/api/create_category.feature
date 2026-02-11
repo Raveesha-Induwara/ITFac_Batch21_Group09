@@ -60,6 +60,15 @@ Feature: Create category API
       | Rose         |  12       | 401        |
 
 
-    
+  @api-category-create @new
+  Scenario: Verify API prevents category creation when category name does not meet minimum length or exceeds maximum length.
+  Given an admin authorization token is available
+  When the admin sends a POST request to add main category with "<categoryName>" as the main category name
+  Then the response status code should be <statusCode> for category creation
+  And the response should contain an error message indicating bad request
 
-  
+  Examples:
+      | categoryName      | statusCode |
+      | AnthuriumFlower   | 400        |
+      | A                 | 400        |
+

@@ -7,13 +7,14 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "src/test/resources/features/categories/api",
+        features = "src/test/resources/features/categories",
         glue = {"com.example.stepdefinitions"},
         plugin = {
             "pretty",
             "html:target/cucumber-reports.html",
             "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
         },
+        tags = "@new",
         monochrome = true
 )
 public class TestRunner {

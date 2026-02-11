@@ -92,6 +92,20 @@ public class CategoryCreateAPIStepDefinitions {
             throw e;
         }
     }
+    
+    @Then("the response should contain an error message indicating bad request")
+    public void theResponseShouldContainErrorMessageIndicatingBadRequest() {
+        String error = response.jsonPath().getString("error");
+        String message = response.jsonPath().getString("details");
+
+        try {
+            System.out.println(message);
+            assertEquals("BAD_REQUEST", error);
+        } catch (AssertionError e) {
+            System.out.println("Expected error message 'BAD_REQUEST' but got: " + error);
+            throw e;
+        }
+    }
 
     @After
     public void deleteCategory() {
