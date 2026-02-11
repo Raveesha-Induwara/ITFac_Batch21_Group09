@@ -5,6 +5,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
@@ -70,6 +71,48 @@ public class CategoryService {
         RequestSpecification request = authService.getAuthenticatedRequest("testuser", "test123");
 
         return request.get("/api/categories/sub-categories");
+    }
+
+    public Response getAllCategoriesNonAdmin() {
+        RequestSpecification request = authService.getAuthenticatedRequest("testuser", "test123");
+        return request.get("/api/categories");
+    }
+    
+    public Response getAllCategoriesByName(String categoryName) {
+        RequestSpecification request = authService.getAuthenticatedRequest("testuser", "test123");
+        return request.queryParam("name", categoryName).get("/api/categories");
+    }
+
+    public Response getAllCategoriesByID(int parentID) {
+        RequestSpecification request = authService.getAuthenticatedRequest("testuser", "test123");
+        return request.queryParam("parentId", parentID).get("/api/categories");
+    }
+
+    public Response getAllCategoriesByNonNumericID(String parentID) {
+        RequestSpecification request = authService.getAuthenticatedRequest("testuser", "test123");
+        return request.queryParam("parentId", parentID).get("/api/categories");
+    }
+
+    public Response getAllCategoriesByNameAndID(String categoryName, int parentID) {
+        RequestSpecification request = authService.getAuthenticatedRequest("testuser", "test123");
+        return request.queryParam("name", categoryName).queryParam("parentId", parentID ).get("/api/categories");
+    }
+
+    public void isCategoryListValid(Response response) {
+        assertNotNull("Response body should not be null", response.getBody());
+        
+        response.jsonPath().getList("$").forEach(category -> {
+            assertNotNull("Category ID should not be null", ((Map<String, Object>) category).get("id"));
+            assertNotNull("Category name should not be null", ((Map<String, Object>) category).get("name"));
+        });
+    }
+
+    public void isCategoryListValid(Response response, String categoryName) {
+        assertNotNull("Response body should not be null", response.getBody());
+        
+        response.jsonPath().getList("$").forEach(category -> {
+            assertEquals("Category name should match", categoryName, ((Map<String, Object>) category).get("name"));
+        });
     }
 
     public Response createCategoryAdmin(Map<String, Object> categoryData) {
