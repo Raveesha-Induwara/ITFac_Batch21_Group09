@@ -1,5 +1,7 @@
 package com.example.stepdefinitions.categories.api;
 
+import static org.junit.Assert.assertEquals;
+
 import com.example.pages.category.api.CategoryService;
 
 import io.cucumber.java.en.Then;
@@ -47,6 +49,11 @@ public class CategoryGetAPIStepDefinitions {
 
     @When("the user sends a GET request with non-numeric value for parentId {string}")
     public void the_user_sends_a_get_request_with_non_numeric_value_for_parentId(String parentId) {
-        response = categoryService.getAllCategoriesByNonNumericID(parentId);
+        response = categoryService.getAllCategoriesByNonNumericID("abc");
+    }
+
+    @Then("the response status code should be {int} for category retrieval")
+    public void the_response_status_code_should_be_for_category_retrieval(Integer statusCode) {
+        assertEquals(statusCode.intValue(), response.getStatusCode());
     }
 }
