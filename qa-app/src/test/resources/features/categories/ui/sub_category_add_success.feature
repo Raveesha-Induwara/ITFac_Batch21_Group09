@@ -12,4 +12,4 @@ Feature: Verify successfully adding a sub category
     Then click on the "Save" button
     Then the system should show the "Category added successfully" message
     And the new category "Apple rose" should appear in the category list
-    And Delete the newly added category to maintain test data integrity
+    And Delete the newly added "Apple rose" category to maintain test data integrity

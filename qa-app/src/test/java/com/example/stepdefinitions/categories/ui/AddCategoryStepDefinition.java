@@ -58,18 +58,23 @@ public class AddCategoryStepDefinition {
         addCategoryPage.verifyCategoryInList(categoryName);
     }
 
-    @Then("Delete the newly added category to maintain test data integrity")
-    public void deleteTheNewlyAddedCategoryToMaintainTestDataIntegrity() {
-        addCategoryPage.deleteFirstCategory();
+    @Then("Delete the newly added {string} category to maintain test data integrity")
+    public void deleteTheNewlyAddedCategoryToMaintainTestDataIntegrity(String categoryName) {
+        addCategoryPage.deleteCategory(categoryName);
     }
 
-    @Then("the system should show the Category already exists error message")
-    public void theSystemShouldShowTheErrorMessage() {
-        addCategoryPage.showDuplicationErrorMessage();
+    @Then("the system should show the {string} error message")
+    public void theSystemShouldShowTheErrorMessage(String expectedErrorMessage) {
+        addCategoryPage.showDuplicationErrorMessage(expectedErrorMessage);
     }
 
     @Then("the new category {string} should not appear in the category list")
     public void the_new_category_should_not_appear_in_the_category_list(String string) {
         addCategoryPage.verifyCategoryNotInList(string);
+    }
+
+    @Then("the admin tries to delete {string} category")
+    public void theAdminTriesToDeleteCategory(String categoryName) {
+        addCategoryPage.deleteCategory(categoryName);
     }
 }   

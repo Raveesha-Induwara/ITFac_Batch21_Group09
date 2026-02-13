@@ -174,23 +174,40 @@ public class AddCategoryPage {
         }
     }
 
-    public void deleteFirstCategory() {
+    // public void deleteFirstCategory() {
+    //     try {
+    //         WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteBtn));
+    //         deleteButton.click();
+    //         wait.until(ExpectedConditions.alertIsPresent());
+    //         driver.switchTo().alert().accept();
+    //         System.out.println("First category deleted successfully.");
+    //     } catch (TimeoutException e) {
+    //         System.out.println("Failed to delete the first category within the timeout period.");
+    //     }
+    // }
+
+    public void deleteCategory(String categoryName) {
+        By deleteButtonByCategoryName = By.xpath("//tbody//tr[td[contains(text(), '" + categoryName + "')]]//td[4]//form//button");
         try {
-            WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteBtn));
+            WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteButtonByCategoryName));
             deleteButton.click();
             wait.until(ExpectedConditions.alertIsPresent());
             driver.switchTo().alert().accept();
-            System.out.println("First category deleted successfully.");
+            System.out.println("Category '" + categoryName + "' deleted successfully.");
         } catch (TimeoutException e) {
-            System.out.println("Failed to delete the first category within the timeout period.");
+            System.out.println("Failed to delete category '" + categoryName + "' within the timeout period.");
         }
     }
 
-    public void showDuplicationErrorMessage() {
+    public void showDuplicationErrorMessage(String expectedErrorMessage) {
         try {
             WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(duplicateCategoryErrorMsg));
             String errorMessage = errorElement.getText().trim();
-            System.out.println("Duplication error message displayed: " + errorMessage);
+            if (!errorMessage.equals(expectedErrorMessage)) {
+                System.out.println("Duplication error message displayed correctly: " + errorMessage);
+            } else {
+                System.out.println("Unexpected duplication error message. Expected: '" + expectedErrorMessage + "', but got: '" + errorMessage + "'");
+            }
         } catch (TimeoutException e) {
             System.out.println("No duplication error message displayed within the timeout period.");
         }

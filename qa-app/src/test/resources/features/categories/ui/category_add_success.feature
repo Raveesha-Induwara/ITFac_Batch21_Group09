@@ -11,4 +11,4 @@ Feature: Verify successfully adding a category
     Then click on the "Save" button
     Then the system should show the "Category added successfully" message
     And the new category "Main" should appear in the category list
-    And Delete the newly added category to maintain test data integrity
+    And Delete the newly added "Main" category to maintain test data integrity
