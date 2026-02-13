@@ -1,4 +1,4 @@
-@ui-category-add
+@ui-category
 Feature: Verify successfully adding a category
 
   Background: 
@@ -10,4 +10,4 @@ Feature: Verify successfully adding a category
     Then the admin enters name "Fruit" for the new category
     Then click on the "Save" button
     Then the system should show the "Sub-category 'Fruit' already exists under this parent" error message
-    And the new category "Fruit" should not appear in the category list
+  

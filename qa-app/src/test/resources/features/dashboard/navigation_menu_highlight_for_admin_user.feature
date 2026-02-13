@@ -1,3 +1,4 @@
+@dashboard @navigation-menu
 Feature: Side Navigation menu highlights the active page for admin users.
 
   As an admin user

@@ -1,4 +1,4 @@
-@ui-category-add
+@ui-category
 Feature: Verify successfully adding a category
 
   Background: 

@@ -1,4 +1,4 @@
-@ui-category-delete
+@ui-category
 Feature: Verify successfully adding a category
 
   Background: 

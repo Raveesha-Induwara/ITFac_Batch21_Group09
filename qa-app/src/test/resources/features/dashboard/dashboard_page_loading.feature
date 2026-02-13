@@ -1,3 +1,4 @@
+@dashboard @ui-dashboard-loading
 Feature: Dashboard loads immediately after user successfully login.
 
   As an admin user

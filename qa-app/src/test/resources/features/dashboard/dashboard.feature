@@ -1,4 +1,4 @@
-@dashboard-tests
+@dashboard @ui-dashboard-tests
 Feature: Dashboard Access for Non-Admin Users
 
   Background: 

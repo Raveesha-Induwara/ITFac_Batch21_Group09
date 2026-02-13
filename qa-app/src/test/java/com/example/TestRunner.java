@@ -7,14 +7,14 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "src/test/resources/features/categories",
+        features = "src/test/resources/features",
         glue = {"com.example.stepdefinitions"},
         plugin = {
             "pretty",
             "html:target/cucumber-reports.html",
             "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
         },
-        tags = "@ui-category-add",
+        tags = "@dashboard and @ui-category and @api-category-create and @api-category-retrieve",
         monochrome = true
 )
 public class TestRunner {
