@@ -45,7 +45,7 @@ Feature: Retrieve category API
             | Fruit          | 3         |
             | Tree           | 12        |
 
-    @api-category-retrieve @test
+    @api-category-retrieve
     Scenario: Verify non-admin user can not retrieve categories with invalid data type for parentId.
         Given a non-admin authorization token is available
         When the user sends a GET request with non-numeric value for parentId "<parent_id>"
