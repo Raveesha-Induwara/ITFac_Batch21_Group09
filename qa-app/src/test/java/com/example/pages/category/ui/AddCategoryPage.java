@@ -30,6 +30,7 @@ public class AddCategoryPage {
 
     // Validation error message locator
     private By validationErrorMsg = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[1]/div");
+    private By duplicateCategoryErrorMsg = By.xpath("/html/body/div/div/div[2]/div[2]/div/span");
     
     // Edit button in the first row of the table
     private By firstRowEditBtn = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr[1]/td[4]/a");
@@ -164,6 +165,15 @@ public class AddCategoryPage {
         }
     }
 
+    public void verifyCategoryNotInList(String categoryName) {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody//tr//td[contains(text(), '" + categoryName + "')]")));
+            System.out.println("Category '" + categoryName + "' is unexpectedly visible in the list.");
+        } catch (TimeoutException e) {
+            System.out.println("Category '" + categoryName + "' is not visible in the list, as expected.");
+        }
+    }
+
     public void deleteFirstCategory() {
         try {
             WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteBtn));
@@ -173,6 +183,16 @@ public class AddCategoryPage {
             System.out.println("First category deleted successfully.");
         } catch (TimeoutException e) {
             System.out.println("Failed to delete the first category within the timeout period.");
+        }
+    }
+
+    public void showDuplicationErrorMessage() {
+        try {
+            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(duplicateCategoryErrorMsg));
+            String errorMessage = errorElement.getText().trim();
+            System.out.println("Duplication error message displayed: " + errorMessage);
+        } catch (TimeoutException e) {
+            System.out.println("No duplication error message displayed within the timeout period.");
         }
     }
 
