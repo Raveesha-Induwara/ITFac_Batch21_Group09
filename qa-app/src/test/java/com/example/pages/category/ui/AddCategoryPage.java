@@ -26,9 +26,11 @@ public class AddCategoryPage {
     private By submitBtn = By.xpath("/html/body/div/div/div[2]/div[2]/form/button");
     private By cancelBtn = By.xpath("/html/body/div/div/div[2]/div[2]/form/a");
     private By SubmissionAlertMsg = By.xpath("/html/body/div[1]/div/div[2]/div[2]/div");
+    private By parentCategoryDropdown = By.name("parentId");
 
     // Validation error message locator
     private By validationErrorMsg = By.xpath("/html/body/div/div/div[2]/div[2]/form/div[1]/div");
+    private By duplicateCategoryErrorMsg = By.xpath("/html/body/div/div/div[2]/div[2]/div/span");
     
     // Edit button in the first row of the table
     private By firstRowEditBtn = By.xpath("/html/body/div[1]/div/div[2]/div[2]/table/tbody/tr[1]/td[4]/a");
@@ -115,13 +117,100 @@ public class AddCategoryPage {
     public void enterCategoryName(String name) {
         WebElement nameEl = wait.until(ExpectedConditions.visibilityOfElementLocated(categoryNameField));
         nameEl.clear();
+        // add wait 10s
+        wait.until(ExpectedConditions.elementToBeClickable(categoryNameField));
         if (name != null && !name.isEmpty()) {
             nameEl.sendKeys(name);
         }
     }
 
+    public void selectParentCategory(String parentCategory) {
+        WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(parentCategoryDropdown));
+        Select select = new Select(dropdown);
+        try {
+            select.selectByVisibleText(parentCategory);
+        } catch (Exception e) {
+            select.selectByIndex(0);
+        }
+    }
+
     public void clickSubmit() {
         wait.until(ExpectedConditions.elementToBeClickable(submitBtn)).click();
+    }
+
+    public void showSuccessMessage(String expectedMessage) {
+        try {
+            WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(SubmissionAlertMsg));
+            String actualMessage = messageElement.getText().trim();
+            if (actualMessage.equals(expectedMessage)) {
+                System.out.println("Success message displayed: " + actualMessage);
+            } else {
+                System.out.println("Unexpected message. Expected: '" + expectedMessage + "', but got: '" + actualMessage + "'");
+            }
+        } catch (TimeoutException e) {
+            System.out.println("No success message displayed within the timeout period.");
+        }
+    }
+
+    public void verifyCategoryInList(String categoryName) {
+        try {
+            WebElement categoryElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody//tr//td[contains(text(), '" + categoryName + "')]")));
+            if (categoryElement.isDisplayed()) {
+                System.out.println("Category '" + categoryName + "' is visible in the list.");
+            } else {
+                System.out.println("Category '" + categoryName + "' is not visible in the list.");
+            }
+        } catch (TimeoutException e) {
+            System.out.println("Category '" + categoryName + "' was not found in the list within the timeout period.");
+        }
+    }
+
+    public void verifyCategoryNotInList(String categoryName) {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody//tr//td[contains(text(), '" + categoryName + "')]")));
+            System.out.println("Category '" + categoryName + "' is unexpectedly visible in the list.");
+        } catch (TimeoutException e) {
+            System.out.println("Category '" + categoryName + "' is not visible in the list, as expected.");
+        }
+    }
+
+    // public void deleteFirstCategory() {
+    //     try {
+    //         WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(firstRowDeleteBtn));
+    //         deleteButton.click();
+    //         wait.until(ExpectedConditions.alertIsPresent());
+    //         driver.switchTo().alert().accept();
+    //         System.out.println("First category deleted successfully.");
+    //     } catch (TimeoutException e) {
+    //         System.out.println("Failed to delete the first category within the timeout period.");
+    //     }
+    // }
+
+    public void deleteCategory(String categoryName) {
+        By deleteButtonByCategoryName = By.xpath("//tbody//tr[td[contains(text(), '" + categoryName + "')]]//td[4]//form//button");
+        try {
+            WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteButtonByCategoryName));
+            deleteButton.click();
+            wait.until(ExpectedConditions.alertIsPresent());
+            driver.switchTo().alert().accept();
+            System.out.println("Category '" + categoryName + "' deleted successfully.");
+        } catch (TimeoutException e) {
+            System.out.println("Failed to delete category '" + categoryName + "' within the timeout period.");
+        }
+    }
+
+    public void showDuplicationErrorMessage(String expectedErrorMessage) {
+        try {
+            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(duplicateCategoryErrorMsg));
+            String errorMessage = errorElement.getText().trim();
+            if (!errorMessage.equals(expectedErrorMessage)) {
+                System.out.println("Duplication error message displayed correctly: " + errorMessage);
+            } else {
+                System.out.println("Unexpected duplication error message. Expected: '" + expectedErrorMessage + "', but got: '" + errorMessage + "'");
+            }
+        } catch (TimeoutException e) {
+            System.out.println("No duplication error message displayed within the timeout period.");
+        }
     }
 
     public String getValidationErrorMessage() {

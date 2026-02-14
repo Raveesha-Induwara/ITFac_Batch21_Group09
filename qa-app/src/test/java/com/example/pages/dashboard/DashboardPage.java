@@ -16,6 +16,10 @@ public class DashboardPage {
     private By categoriesButton   = By.linkText("Categories");
     private By plantsButton   = By.linkText("Plants");
     private By salesButton   = By.linkText("Sales");
+    private By manageCategoriesButton = By.linkText("Manage Categories");
+    private By categoriesSummaryCard = By.xpath("/html/body/div/div/div[2]/div[2]/div/div/div[1]/div/div");
+    private By plantsSummaryCard = By.xpath("/html/body/div/div/div[2]/div[2]/div/div/div[2]/div/div");
+    private By salesSummaryCard = By.xpath("/html/body/div/div/div[2]/div[2]/div/div/div[3]/div/div");
     
     public DashboardPage(WebDriver driver) {
         this.driver = driver;
@@ -49,5 +53,33 @@ public class DashboardPage {
 
     public boolean isMenuHighlighted(String menuName) {
         return driver.findElement(By.linkText(menuName)).getAttribute("class").contains("active");
+    }
+
+    public boolean isButtonVisible(String buttonName) {
+        By button = By.linkText(buttonName);
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(button)).isDisplayed();
+    }
+
+    public void clickManageCategories() {
+        driver.findElement(manageCategoriesButton).click();
+    }
+
+    public boolean isOnPage(String pageName) {
+        String expectedUrl = DriverFactory.getBaseUrl() + "/ui/" + pageName.toLowerCase().replace(" ", "-");
+        return wait.until(ExpectedConditions.urlToBe(expectedUrl));
+    }
+
+    public boolean isSummaryCardVisible(String cardName) {
+        switch (cardName) {
+            case "Categories":
+                return wait.until(ExpectedConditions.visibilityOfElementLocated(categoriesSummaryCard)).isDisplayed();
+            case "Plants":
+                return wait.until(ExpectedConditions.visibilityOfElementLocated(plantsSummaryCard)).isDisplayed();
+            case "Sales":
+                return wait.until(ExpectedConditions.visibilityOfElementLocated(salesSummaryCard)).isDisplayed();
+            default:
+                break;
+        }
+        throw new IllegalArgumentException("Invalid card name: " + cardName);
     }
 }
