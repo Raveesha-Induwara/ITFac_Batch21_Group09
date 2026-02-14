@@ -14,7 +14,7 @@ import io.cucumber.junit.CucumberOptions;
             "html:target/cucumber-reports.html",
             "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
         },
-        tags = "@dashboard and @ui-category and @api-category-create and @api-category-retrieve",
+        tags = "@dashboard or @ui-category or @api-category-create or @api-category-retrieve",
         monochrome = true
 )
 public class TestRunner {
