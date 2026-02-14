@@ -1,178 +1,222 @@
-# ITFac_Batch21_Group09
+# QA Training App
 
-## QA Automation Testing Project
+> **ITFac Batch 21 - Group 09**
 
-A comprehensive test automation framework for web application testing using Selenium WebDriver, Cucumber BDD, and Allure reporting.
+Comprehensive test automation framework for plant nursery management system with UI (Selenium) and API (REST Assured) testing using BDD approach.
 
-## Project Overview
+## 🚀 Technology Stack
 
-This project implements automated end-to-end testing for a web application with focus on:
-- User authentication and login functionality
-- Sales page navigation and access control
-- Sales records pagination and data management
+| Category | Technology | Version |
+|----------|------------|----------|
+| Language | Java | 11 |
+| Build Tool | Maven | - |
+| UI Testing | Selenium WebDriver | 4.40.0 |
+| API Testing | REST Assured | - |
+| BDD Framework | Cucumber | 7.14.0 |
+| Test Runner | JUnit | 4.13.2 |
+| Reporting | Allure | 2.25.0 |
+| Driver Manager | WebDriverManager | 5.6.3 |
 
-## Technology Stack
+## 📋 Test Coverage
 
-- **Java 11** - Programming language
-- **Maven** - Build and dependency management
-- **Selenium WebDriver 4.40.0** - Browser automation
-- **Cucumber 7.14.0** - BDD framework for test scenarios
-- **JUnit 4.13.2** - Test execution framework
-- **Allure 2.25.0** - Test reporting
-- **WebDriverManager 5.6.3** - Automatic browser driver management
+### UI Testing (Selenium WebDriver)
 
-## Project Structure
+**Dashboard Module**
+- Page loading and navigation
+- Summary cards display (Categories, Plants, Sales)
+- Navigation menu highlighting
+- Role-based access (Admin/Non-Admin)
+
+**Authentication Module**
+- User login (Admin/Non-Admin)
+- Session management
+
+**Category Module**
+- Add/Edit/Delete categories and subcategories
+- Search by name, filter by parent
+- Sort by ID, name, parent
+- Form validation and duplicate handling
+- Access control (Add/Edit/Delete buttons for non-admin)
+- Cancel button functionality
+
+**Plant Module**
+- Add/Edit plants with validation
+- Search by name and category
+- Combined search and filter reset
+- Pagination and sorting
+- Duplicate plant handling
+- Form cancel functionality
+
+**Sales Module**
+- Access sales page
+- Sell plant with form validation
+- Pagination and sorting by sold date
+- Delete confirmation
+- Access control (Sell button for non-admin)
+
+### API Testing (REST Assured)
+
+**Authentication API**
+- Login with token generation
+- Token-based authorization
+
+**Category API**
+- Create category (Admin/Non-Admin/Unauthenticated)
+- Get all categories, main categories, subcategories
+- Get category by ID
+- Get category summary
+- Update category (Admin/Non-Admin)
+- Delete category (Admin/Non-Admin)
+- Delete parent category (orphan child handling)
+
+**Plant API**
+- Create plant (Admin/Non-Admin/Unauthenticated)
+- Get all plants, plants by category
+- Get paged plants
+- Update plant
+- Delete plant
+- Validation scenarios (price, quantity, duplicate)
+
+**Sales API**
+- Create sale (Admin/Non-Admin/Unauthenticated)
+- Get all sales
+- Delete sale
+- Validation (quantity, stock availability)
+
+## 📁 Project Structure
 
 ```
 qa-app/
-├── src/
-│   ├── main/java/
-│   │   └── com/example/
-│   │       └── App.java
-│   └── test/
-│       ├── java/com/example/
-│       │   ├── pages/              # Page Object Model classes
-│       │   │   ├── dashboard/
-│       │   │   ├── sales/
-│       │   │   │   └── SalesPage.java
-│       │   │   └── categories/
-│       │   ├── stepdefinitions/    # Cucumber step definitions
-│       │   │   ├── dashboard/
-│       │   │   │   └── LoginPageStepDefinitions.java
-│       │   │   ├── sales/
-│       │   │   │   ├── SalesPageAccessStepDefinitions.java
-│       │   │   │   └── SalesPaginationStepDefinitions.java
-│       │   │   ├── categories/
-│       │   │   └── Hooks.java
-│       │   ├── utils/              # Utility classes
-│       │   │   ├── ConfigReader.java
-│       │   │   └── DriverFactory.java
-│       │   └── TestRunner.java
-│       └── resources/
-│           ├── features/           # Cucumber feature files
-│           │   ├── dashboard/
-│           │   │   └── login.feature
-│           │   ├── sales/
-│           │   │   ├── sales_page_access.feature
-│           │   │   └── sales_pagination.feature
-│           │   └── categories/
-│           └── config.properties
-├── allure-results/                 # Allure test results
-├── target/                         # Build output
-└── pom.xml
+├── src/test/
+│   ├── java/com/example/
+│   │   ├── pages/                    # Page Object Model
+│   │   │   ├── category/
+│   │   │   ├── dashboard/            
+│   │   │   ├── login/
+│   │   │   ├── plants/
+│   │   │   ├── sales/
+│   │   │   └── Common.java           # Shared utilities
+│   │   ├── stepdefinitions/          # Cucumber Step Definitions
+│   │   │   ├── category/
+│   │   │   ├── dashboard/
+│   │   │   ├── login/
+│   │   │   ├── plants/
+│   │   │   ├── sales/
+│   │   │   └── Hooks.java            # Before/After hooks
+│   │   ├── utils/
+│   │   │   ├── ConfigReader.java     # Properties file reader
+│   │   │   └── DriverFactory.java    # WebDriver singleton
+│   │   └── TestRunner.java           # Cucumber test runner
+│   └── resources/
+│       ├── features/                 # Gherkin feature files
+│       │   ├── category/
+│       │   ├── dashboard/ 
+│       │   ├── login/api/
+│       │   ├── plants/
+│       │   └── sales/
+│       └── config.properties         # Configuration file
+├── allure-results/                   # Allure test results
+├── target/                           # Build output
+│   └── cucumber-reports.html         # Cucumber HTML report
+└── pom.xml                           # Maven configuration
 ```
 
-## Test Scenarios
+## ⚙️ Configuration
 
-### Dashboard - Login Feature
-- ✅ Successful login with valid credentials
-- ✅ Unsuccessful login with invalid credentials
-- ✅ Password recovery process
-
-### Sales - Page Access
-- ✅ Admin can access Sales page from side navigation
-- ✅ Sales section highlighting verification
-- ✅ Navigation to Sales page validation
-
-### Sales - Pagination
-- ✅ Sales records pagination (max 10 records per page)
-- ✅ Pagination controls display
-- ✅ Navigation between pages functionality
-
-## Prerequisites
-
-- Java Development Kit (JDK) 11 or higher
-- Maven 3.6+
-- Chrome browser installed
-- Internet connection (for downloading dependencies)
-
-## Configuration
-
-Edit `src/test/resources/config.properties` to configure:
+Edit `src/test/resources/config.properties`:
 
 ```properties
 browser=chrome
 baseUrl=http://localhost:8080
 ```
 
-## Installation & Setup
+## 🛠️ Setup & Installation
 
-1. Clone the repository:
+### Prerequisites
+- JDK 11 or higher
+- Maven 3.6+
+- Chrome browser
+- Application running on `http://localhost:8080`
+
+### Installation
+
 ```bash
+# Clone repository
 git clone <repository-url>
 cd ITFac_Batch21_Group09/qa-app
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 mvn clean install
 ```
 
-## Running Tests
+## ▶️ Running Tests
 
-### Run all tests:
+### Run All Tests
 ```bash
 mvn test
 ```
 
-### Run specific feature:
+### Run Specific Feature File
 ```bash
-mvn test -Dcucumber.options="src/test/resources/features/sales/sales_pagination.feature"
+mvn test -Dcucumber.options="src/test/resources/features/plants/ui/plant_add_success.feature"
+mvn test -Dcucumber.options="src/test/resources/features/category/api/get_category_by_id.feature"
 ```
 
-### Run with specific tags (if configured):
-```bash
-mvn test -Dcucumber.filter.tags="@smoke"
-```
-
-## Test Reports
+## 📊 Test Reports
 
 ### Cucumber HTML Report
-After test execution, view the report at:
+After test execution:
 ```
 target/cucumber-reports.html
 ```
 
 ### Allure Report
-Generate and view Allure report:
+
+**Interactive Report:**
 ```bash
 mvn allure:serve
 ```
 
-Or generate static report:
+**Static Report:**
 ```bash
 mvn allure:report
 ```
 View at: `target/site/allure-maven-plugin/index.html`
 
-## Design Patterns
+## 🏗️ Design Patterns & Best Practices
 
-- **Page Object Model (POM)** - Encapsulates page elements and actions
-- **Singleton Pattern** - WebDriver instance management
-- **Factory Pattern** - Driver initialization
-- **BDD (Behavior Driven Development)** - Gherkin syntax for test scenarios
+- **Page Object Model (POM)** - Separate page classes for UI elements and actions
+- **Service Layer Pattern** - API service classes (AuthService, CategoryService, PlantService, SalesService)
+- **Singleton Pattern** - WebDriver instance management via DriverFactory
+- **Factory Pattern** - Driver initialization and configuration
+- **BDD (Behavior Driven Development)** - Gherkin syntax for readable test scenarios
+- **Hooks Pattern** - Setup and teardown using @Before and @After
+- **Configuration Management** - Externalized config via properties file
 
-## Key Features
+## 🔑 Key Features
 
-- ✨ Automatic browser driver management with WebDriverManager
-- 🔄 Reusable page objects and step definitions
-- 📊 Comprehensive test reporting with Allure
-- 🎯 BDD approach with Cucumber for readable test scenarios
-- ⚙️ Configurable test environment via properties file
-- 🧪 Hooks for setup and teardown operations
-- 🔍 Explicit waits for stable test execution
+✅ **Dual Testing Approach** - UI (Selenium) + API (REST Assured)  
+✅ **Role-Based Testing** - Admin and Non-Admin user scenarios  
+✅ **Comprehensive Validation** - Form validation, error handling, access control  
+✅ **Automatic Driver Management** - WebDriverManager handles browser drivers  
+✅ **Token-Based API Auth** - JWT token management for API tests  
+✅ **Reusable Components** - Common utilities and shared page objects  
+✅ **Detailed Reporting** - Cucumber HTML + Allure reports  
+✅ **Tag-Based Execution** - Flexible test execution with Cucumber tags  
 
-## Contributing
+## 👥 Test Users
+
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | admin | admin123 |
+| Non-Admin | testuser | test123 |
+
+## 🤝 Contributing
 
 1. Create a feature branch
-2. Implement tests following existing patterns
-3. Ensure all tests pass
-4. Submit pull request
+2. Follow existing Page Object Model structure
+3. Write Gherkin scenarios before implementation
+4. Ensure all tests pass before committing
+5. Update documentation if needed
 
-## Team
-
-ITFac Batch 21 - Group 09
-
-## License
-
-This project is for educational purposes.
+---
